@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
+using Zzb.ML.EF;
 
 namespace Zzb.ML.Gobang
 {
@@ -14,6 +16,8 @@ namespace Zzb.ML.Gobang
         [STAThread]
         static void Main()
         {
+            using var context = ZzbContext.CreateContext();
+            context.Database.Migrate();
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
