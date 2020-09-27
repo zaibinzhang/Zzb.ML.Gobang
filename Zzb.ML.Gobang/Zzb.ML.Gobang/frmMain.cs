@@ -60,6 +60,7 @@ namespace Zzb.ML.Gobang
 
         private void AutoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            board.ReStartGame();
             board.RandomGame();
         }
     }
