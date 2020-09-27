@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Zzb.ML.EF;
 
 namespace Zzb.ML.EF.Migrations
 {
     [DbContext(typeof(ZzbContext))]
-    partial class ZzbContextModelSnapshot : ModelSnapshot
+    [Migration("20200927063033_CreateName")]
+    partial class CreateName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
