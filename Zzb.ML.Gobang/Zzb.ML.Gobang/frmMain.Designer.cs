@@ -30,6 +30,7 @@
         {
             this.menu = new System.Windows.Forms.MenuStrip();
             this.新游戏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemNewGame = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemDebug = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,12 +56,19 @@
             // 新游戏ToolStripMenuItem
             // 
             this.新游戏ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.autoToolStripMenuItem,
             this.menuItemNewGame,
             this.menuItemDebug,
             this.menuItemExit});
             this.新游戏ToolStripMenuItem.Name = "新游戏ToolStripMenuItem";
             this.新游戏ToolStripMenuItem.Size = new System.Drawing.Size(62, 28);
             this.新游戏ToolStripMenuItem.Text = "游戏";
+            // 
+            // autoToolStripMenuItem
+            // 
+            this.autoToolStripMenuItem.Name = "autoToolStripMenuItem";
+            this.autoToolStripMenuItem.Size = new System.Drawing.Size(182, 34);
+            this.autoToolStripMenuItem.Text = "自动对局";
             // 
             // menuItemNewGame
             // 
@@ -119,12 +127,6 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemExit;
         private System.Windows.Forms.ToolStripMenuItem menuItemDebug;
         private System.Windows.Forms.ToolStripMenuItem menuItemAbout;
-
-
-
-
-
-
-
+        private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
     }
 }
