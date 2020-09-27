@@ -37,15 +37,15 @@ namespace Zzb_ML_GobangML.ConsoleApp
 
             DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, connectionString, sqlCommand);
 
-            //IDataView trainingDataView = loader.Load(dbSource);
+            IDataView trainingDataView = loader.Load(dbSource);
 
             // Load Data
-            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
-                                            path: TRAIN_DATA_FILEPATH,
-                                            hasHeader: true,
-                                            separatorChar: '\t',
-                                            allowQuoting: true,
-                                            allowSparse: false);
+            //IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
+                                            //path: TRAIN_DATA_FILEPATH,
+                                            //hasHeader: true,
+                                            //separatorChar: '\t',
+                                            //allowQuoting: true,
+                                            //allowSparse: false);
 
             // Build training pipeline
             IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(mlContext);

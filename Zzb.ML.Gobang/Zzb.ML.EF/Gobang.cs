@@ -10,7 +10,7 @@ namespace Zzb.ML.EF
 
         public bool IsBlack { get; set; }
 
-        public int Target { get; set; }
+        public float Target { get; set; }
 
         public bool IsWin { get; set; }
 
