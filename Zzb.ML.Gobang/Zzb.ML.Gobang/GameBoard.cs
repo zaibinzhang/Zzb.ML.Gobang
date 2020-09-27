@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Zzb.ML.GameComponent;
@@ -375,6 +376,45 @@ namespace Zzb.ML.Gobang
                 }
             }
             base.OnMouseClick(e);
+        }
+
+        public void RandomGame()
+        {
+            Random random = new Random();
+            List<Point> list = new List<Point>();
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    Point p = new Point(i, j);
+                    list.Add(p);
+                }
+            }
+
+            Point temp = list[random.Next(list.Count)];
+            AddChessman(IndexToScreen(temp.X, temp.Y), color);
+            map[temp.Y, temp.X] = color;
+            list.Remove(temp);
+            while (!IsGameEnd(temp) && list.Count != 0)
+            {
+                color = 3 - color;
+                temp = list[random.Next(list.Count)];
+                AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                map[temp.Y, temp.X] = color;
+                list.Remove(temp);
+            }
+
+            if (list.Count == 0)
+            {
+                MessageBox.Show("平局");
+            }
+            else
+            {
+                OnGameEnd(this, new GameEndEventArgs(color));
+            }
+
+            color = 1;
+
         }
 
 

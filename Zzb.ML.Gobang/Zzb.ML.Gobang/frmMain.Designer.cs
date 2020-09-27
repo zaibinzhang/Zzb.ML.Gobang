@@ -112,6 +112,7 @@
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "妙手连珠—火蜥蜴制作";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.menu.ResumeLayout(false);
             this.menu.PerformLayout();
             this.ResumeLayout(false);

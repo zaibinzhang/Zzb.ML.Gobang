@@ -12,7 +12,7 @@ namespace Zzb.ML.Gobang
         {
             InitializeComponent();
             setGameBoard();
-            
+
         }
 
         private void setGameBoard()
@@ -53,5 +53,14 @@ namespace Zzb.ML.Gobang
             MessageBox.Show("本游戏由火蜥蜴开发^_^，\nQQ：1906747819");
         }
 
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+            autoToolStripMenuItem.Click += AutoToolStripMenuItem_Click;
+        }
+
+        private void AutoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            board.RandomGame();
+        }
     }
 }
