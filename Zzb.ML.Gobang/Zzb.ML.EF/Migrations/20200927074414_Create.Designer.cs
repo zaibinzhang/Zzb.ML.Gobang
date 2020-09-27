@@ -10,7 +10,7 @@ using Zzb.ML.EF;
 namespace Zzb.ML.EF.Migrations
 {
     [DbContext(typeof(ZzbContext))]
-    [Migration("20200927050828_Create")]
+    [Migration("20200927074414_Create")]
     partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,27 +21,36 @@ namespace Zzb.ML.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Zzb.ML.EF.Test", b =>
+            modelBuilder.Entity("Zzb.ML.EF.Gobang", b =>
                 {
-                    b.Property<Guid>("TestId")
+                    b.Property<Guid>("GobangId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsBlack")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsEnable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
+                    b.Property<bool>("IsWin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Map")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Target")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("TestId");
+                    b.HasKey("GobangId");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Gobangs");
                 });
 #pragma warning restore 612, 618
         }

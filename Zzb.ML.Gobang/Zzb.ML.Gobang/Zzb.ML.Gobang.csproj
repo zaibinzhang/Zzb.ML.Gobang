@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Zzb.ML.Common\Zzb.ML.Common.csproj" />
     <ProjectReference Include="..\Zzb.ML.EF\Zzb.ML.EF.csproj" />
     <ProjectReference Include="..\Zzb.ML.GameComponent\Zzb.ML.GameComponent.csproj" />
   </ItemGroup>

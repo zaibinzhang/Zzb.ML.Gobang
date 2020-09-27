@@ -8,25 +8,28 @@ namespace Zzb.ML.EF.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Tests",
+                name: "Gobangs",
                 columns: table => new
                 {
-                    TestId = table.Column<Guid>(nullable: false),
+                    GobangId = table.Column<Guid>(nullable: false),
                     CreateTime = table.Column<DateTime>(nullable: false),
                     UpdateTime = table.Column<DateTime>(nullable: false),
                     IsEnable = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    Map = table.Column<string>(nullable: true),
+                    IsBlack = table.Column<bool>(nullable: false),
+                    Target = table.Column<int>(nullable: false),
+                    IsWin = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tests", x => x.TestId);
+                    table.PrimaryKey("PK_Gobangs", x => x.GobangId);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tests");
+                name: "Gobangs");
         }
     }
 }

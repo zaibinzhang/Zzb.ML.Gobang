@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using Castle.Components.DictionaryAdapter;
+using Zzb.ML.Common;
+using Zzb.ML.EF;
 using Zzb.ML.GameComponent;
 
 namespace Zzb.ML.Gobang
@@ -380,6 +384,8 @@ namespace Zzb.ML.Gobang
 
         public void RandomGame()
         {
+            List<EF.Gobang> gobangs = new List<EF.Gobang>();
+
             Random random = new Random();
             List<Point> list = new List<Point>();
             for (int i = 0; i < 15; i++)
@@ -398,8 +404,10 @@ namespace Zzb.ML.Gobang
             while (!IsGameEnd(temp) && list.Count != 0)
             {
                 color = 3 - color;
-                temp = list[random.Next(list.Count)];
+                var count = random.Next(list.Count);
+                temp = list[count];
                 AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                gobangs.Add(new EF.Gobang() { IsBlack = color == 1, Map = map.ToMapString(), Target = count });
                 map[temp.Y, temp.X] = color;
                 list.Remove(temp);
             }
@@ -410,6 +418,14 @@ namespace Zzb.ML.Gobang
             }
             else
             {
+                foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
+                {
+                    gobang.IsWin = true;
+                }
+
+                using var context = ZzbContext.CreateContext();
+                context.Gobangs.AddRange(gobangs);
+                context.SaveChanges();
                 OnGameEnd(this, new GameEndEventArgs(color));
             }
 

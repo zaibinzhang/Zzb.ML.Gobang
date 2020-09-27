@@ -19,51 +19,36 @@ namespace Zzb.ML.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Zzb.ML.EF.Test", b =>
+            modelBuilder.Entity("Zzb.ML.EF.Gobang", b =>
                 {
-                    b.Property<Guid>("TestId")
+                    b.Property<Guid>("GobangId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsBlack")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsEnable")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
+                    b.Property<bool>("IsWin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Map")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name5")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name6")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name7")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name8")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Target")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("TestId");
+                    b.HasKey("GobangId");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Gobangs");
                 });
 #pragma warning restore 612, 618
         }

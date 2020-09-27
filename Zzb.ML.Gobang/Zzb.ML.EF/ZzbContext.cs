@@ -17,7 +17,8 @@ namespace Zzb.ML.EF
             options.UseLazyLoadingProxies().UseSqlServer(connect);
         }
 
-        public DbSet<Test> Tests { get; set; }
+        public DbSet<Gobang> Gobangs { get; set; }
+
 
         public static ZzbContext CreateContext()
         {
