@@ -485,7 +485,7 @@ namespace Zzb.ML.Gobang
                         Y = MapList[i].Y
                     };
 
-                    list.Add(MapList[i]);
+              
 
                     sampleData.SetPoint(map);
 
@@ -507,10 +507,20 @@ namespace Zzb.ML.Gobang
                         f1 = temp;
                         point1 = MapList[i];
                     }
+
+                    if (predictionResult.Prediction)
+                    {
+                        list.Add(MapList[i]);
+                    }
                 }
             }
 
-            return new Random().NextDouble() > 0.5 ? point : point1;
+            if (list.Count == 0)
+            {
+                return new Random().NextDouble() > 0.5 ? point : point1;
+            }
+
+            return list[new Random().Next(list.Count)];
 
         }
 
