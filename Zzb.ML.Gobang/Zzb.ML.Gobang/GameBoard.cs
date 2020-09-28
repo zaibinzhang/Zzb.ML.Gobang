@@ -7,6 +7,8 @@ using Castle.Components.DictionaryAdapter;
 using Zzb.ML.Common;
 using Zzb.ML.EF;
 using Zzb.ML.GameComponent;
+using Zzb_ML_GobangML.ConsoleApp;
+using Zzb_ML_GobangML.Model;
 
 namespace Zzb.ML.Gobang
 {
@@ -380,6 +382,99 @@ namespace Zzb.ML.Gobang
                 }
             }
             base.OnMouseClick(e);
+        }
+
+        public void AutoGame()
+        {
+            using var context = ZzbContext.CreateContext();
+            if (!context.Gobangs.Any())
+            {
+                RandomGame();
+            }
+            else
+            {
+                ModelBuilder.CreateModel();
+
+                List<EF.Gobang> gobangs = new List<EF.Gobang>();
+
+                var temp = CalNext();
+                AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
+                map[temp.X, temp.Y] = color;
+
+                while (!IsGameEnd(temp))
+                {
+                    color = 3 - color;
+                    temp = CalNext();
+                    AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                    gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
+                    map[temp.X, temp.Y] = color;
+
+                }
+                foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
+                {
+                    gobang.IsWin = true;
+                }
+                context.Gobangs.AddRange(gobangs);
+                context.SaveChanges();
+                OnGameEnd(this, new GameEndEventArgs(color));
+
+
+                color = 1;
+            }
+        }
+
+        private static List<Point> _mapList;
+
+        private static List<Point> MapList
+        {
+            get
+            {
+                if (_mapList == null)
+                {
+                    _mapList = new List<Point>();
+                    for (int i = 0; i < 15; i++)
+                    {
+                        for (int j = 0; j < 15; j++)
+                        {
+                            Point p = new Point(i, j);
+                            _mapList.Add(p);
+                        }
+                    }
+                }
+
+                return _mapList;
+            }
+        }
+
+        public Point CalNext()
+        {
+            Point point = new Point();
+            float f = 0;
+
+            for (int i = 0; i < MapList.Count; i++)
+            {
+                if (map[MapList[i].X, MapList[i].Y] == 0)
+                {
+                    ModelInput sampleData = new ModelInput()
+                    {
+                        Map = map.ToMapString(),
+                        IsBlack = color == 1,
+                        Target = i,
+                    };
+
+                    var predictionResult = ConsumeModel.Predict(sampleData);
+
+                    if (predictionResult.Score[1] > f)
+                    {
+                        f = predictionResult.Score[1];
+                        point = MapList[i];
+                    }
+                }
+            }
+
+            return point;
+
         }
 
         public void RandomGame()
