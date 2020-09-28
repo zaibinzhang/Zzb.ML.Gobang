@@ -470,7 +470,9 @@ namespace Zzb.ML.Gobang
         {
             List<Point> list = new List<Point>();
             float f = 0;
+            float f1 = 0;
             Point point = new Point();
+            Point point1 = new Point();
 
             for (int i = 0; i < MapList.Count; i++)
             {
@@ -494,13 +496,21 @@ namespace Zzb.ML.Gobang
                         : predictionResult.Score.Min();
                     if (temp > f)
                     {
-                        f = predictionResult.Score[0];
+                        f1 = f;
+                        f = temp;
+                        point1 = point;
                         point = MapList[i];
+                    }
+
+                    if (temp < f && temp > f1)
+                    {
+                        f1 = temp;
+                        point1 = MapList[i];
                     }
                 }
             }
 
-            return point;
+            return new Random().NextDouble() > 0.5 ? point : point1;
 
         }
 
