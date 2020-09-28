@@ -13,7 +13,7 @@ namespace Zzb_ML_GobangML.ConsoleApp
 {
     public static class ModelBuilder
     {
-        private static string TRAIN_DATA_FILEPATH = @"C:\Users\zaibi\AppData\Local\Temp\02a34ccd-97c5-4af0-a8e0-b61428323fde.tsv";
+        private static string TRAIN_DATA_FILEPATH = @"C:\Users\zaibi\AppData\Local\Temp\656c8fec-98fb-44e3-9252-7b3dbf676558.tsv";
         private static string MODEL_FILEPATH = @"C:\Users\zaibi\AppData\Local\Temp\MLVSTools\Zzb.ML.GobangML\Zzb.ML.GobangML.Model\MLModel.zip";
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
@@ -25,27 +25,21 @@ namespace Zzb_ML_GobangML.ConsoleApp
 
             string connectionString = @"Data Source=.;Database=ML;Integrated Security=True;Connect Timeout=30";
 
-            string sqlCommand = @"SELECT [GobangId]
-             ,[CreateTime]
-            ,[UpdateTime]
-            ,[IsEnable]
-            ,[Map]
-            ,[IsBlack]
-            ,[Target]
-            ,[IsWin]
+            string sqlCommand = @"SELECT *
             FROM[ML].[dbo].[Gobangs]";
 
             DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, connectionString, sqlCommand);
 
             IDataView trainingDataView = loader.Load(dbSource);
 
+
             // Load Data
             //IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
-                                            //path: TRAIN_DATA_FILEPATH,
-                                            //hasHeader: true,
-                                            //separatorChar: '\t',
-                                            //allowQuoting: true,
-                                            //allowSparse: false);
+            //                                path: TRAIN_DATA_FILEPATH,
+            //                                hasHeader: true,
+            //                                separatorChar: '\t',
+            //                                allowQuoting: true,
+            //                                allowSparse: false);
 
             // Build training pipeline
             IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(mlContext);
@@ -65,8 +59,7 @@ namespace Zzb_ML_GobangML.ConsoleApp
             // Data process configuration with pipeline data transformations 
             var dataProcessPipeline = mlContext.Transforms.Conversion.MapValueToKey("IsWin", "IsWin")
                                       .Append(mlContext.Transforms.Conversion.ConvertType(new[] { new InputOutputColumnPair("IsBlack", "IsBlack") }))
-                                      .Append(mlContext.Transforms.Text.FeaturizeText("Map_tf", "Map"))
-                                      .Append(mlContext.Transforms.Concatenate("Features", new[] { "IsBlack", "Map_tf", "Target" }))
+                                      .Append(mlContext.Transforms.Concatenate("Features", new[] { "IsBlack", "Point1", "Point2", "Point3", "Point4", "Point5", "Point6", "Point7", "Point8", "Point9", "Point10", "Point11", "Point12", "Point13", "Point14", "Point15", "Point16", "Point17", "Point18", "Point19", "Point20", "Point21", "Point22", "Point23", "Point24", "Point25", "Point26", "Point27", "Point28", "Point29", "Point30", "Point31", "Point32", "Point33", "Point34", "Point35", "Point36", "Point37", "Point38", "Point39", "Point40", "Point41", "Point42", "Point43", "Point44", "Point45", "Point46", "Point47", "Point48", "Point49", "Point50", "Point51", "Point52", "Point53", "Point54", "Point55", "Point56", "Point57", "Point58", "Point59", "Point60", "Point61", "Point62", "Point63", "Point64", "Point65", "Point66", "Point67", "Point68", "Point69", "Point70", "Point71", "Point72", "Point73", "Point74", "Point75", "Point76", "Point77", "Point78", "Point79", "Point80", "Point81", "Point82", "Point83", "Point84", "Point85", "Point86", "Point87", "Point88", "Point89", "Point90", "Point91", "Point92", "Point93", "Point94", "Point95", "Point96", "Point97", "Point98", "Point99", "Point100", "Point101", "Point102", "Point103", "Point104", "Point105", "Point106", "Point107", "Point108", "Point109", "Point110", "Point111", "Point112", "Point113", "Point114", "Point115", "Point116", "Point117", "Point118", "Point119", "Point120", "Point121", "Point122", "Point123", "Point124", "Point125", "Point126", "Point127", "Point128", "Point129", "Point130", "Point131", "Point132", "Point133", "Point134", "Point135", "Point136", "Point137", "Point138", "Point139", "Point140", "Point141", "Point142", "Point143", "Point144", "Point145", "Point146", "Point147", "Point148", "Point149", "Point150", "Point151", "Point152", "Point153", "Point154", "Point155", "Point156", "Point157", "Point158", "Point159", "Point160", "Point161", "Point162", "Point163", "Point164", "Point165", "Point166", "Point167", "Point168", "Point169", "Point170", "Point171", "Point172", "Point173", "Point174", "Point175", "Point176", "Point177", "Point178", "Point179", "Point180", "Point181", "Point182", "Point183", "Point184", "Point185", "Point186", "Point187", "Point188", "Point189", "Point190", "Point191", "Point192", "Point193", "Point194", "Point195", "Point196", "Point197", "Point198", "Point199", "Point200", "Point201", "Point202", "Point203", "Point204", "Point205", "Point206", "Point207", "Point208", "Point209", "Point210", "Point211", "Point212", "Point213", "Point214", "Point215", "Point216", "Point217", "Point218", "Point219", "Point220", "Point221", "Point222", "Point223", "Point224", "Point225", "X", "Y" }))
                                       .Append(mlContext.Transforms.NormalizeMinMax("Features", "Features"))
                                       .AppendCacheCheckpoint(mlContext);
             // Set the training algorithm 

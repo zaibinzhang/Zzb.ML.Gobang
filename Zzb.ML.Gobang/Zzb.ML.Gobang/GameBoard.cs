@@ -7,7 +7,6 @@ using Castle.Components.DictionaryAdapter;
 using Zzb.ML.Common;
 using Zzb.ML.EF;
 using Zzb.ML.GameComponent;
-using Zzb_ML_GobangML.ConsoleApp;
 using Zzb_ML_GobangML.Model;
 
 namespace Zzb.ML.Gobang
@@ -456,20 +455,20 @@ namespace Zzb.ML.Gobang
             {
                 if (map[MapList[i].X, MapList[i].Y] == 0)
                 {
-                    ModelInput sampleData = new ModelInput()
-                    {
-                        Map = map.ToMapString(),
-                        IsBlack = color == 1,
-                        Target = i,
-                    };
+                    //ModelInput sampleData = new ModelInput()
+                    //{
+                    //    Map = map.ToMapString(),
+                    //    IsBlack = color == 1,
+                    //    Target = i,
+                    //};
 
-                    var predictionResult = ConsumeModel.Predict(sampleData);
+                    //var predictionResult = ConsumeModel.Predict(sampleData);
 
-                    if (predictionResult.Score[1] > f)
-                    {
-                        f = predictionResult.Score[1];
-                        point = MapList[i];
-                    }
+                    //if (predictionResult.Score[1] > f)
+                    //{
+                    //    f = predictionResult.Score[1];
+                    //    point = MapList[i];
+                    //}
                 }
             }
 

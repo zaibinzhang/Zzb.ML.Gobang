@@ -10,21 +10,472 @@ namespace Zzb_ML_GobangML.ConsoleApp
         static void Main(string[] args)
         {
             ModelBuilder.CreateModel();
+
             // Create single instance of sample data from first line of dataset for model input
             ModelInput sampleData = new ModelInput()
             {
-                Map = @"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                Point1 = 0F,
+                Point2 = 2F,
+                Point3 = 1F,
+                Point4 = 2F,
+                Point5 = 2F,
+                Point6 = 1F,
+                Point7 = 1F,
+                Point8 = 2F,
+                Point9 = 2F,
+                Point10 = 0F,
+                Point11 = 2F,
+                Point12 = 2F,
+                Point13 = 1F,
+                Point14 = 1F,
+                Point15 = 0F,
+                Point16 = 0F,
+                Point17 = 0F,
+                Point18 = 0F,
+                Point19 = 1F,
+                Point20 = 0F,
+                Point21 = 0F,
+                Point22 = 0F,
+                Point23 = 0F,
+                Point24 = 2F,
+                Point25 = 0F,
+                Point26 = 0F,
+                Point27 = 0F,
+                Point28 = 1F,
+                Point29 = 2F,
+                Point30 = 2F,
+                Point31 = 1F,
+                Point32 = 1F,
+                Point33 = 0F,
+                Point34 = 0F,
+                Point35 = 2F,
+                Point36 = 2F,
+                Point37 = 0F,
+                Point38 = 0F,
+                Point39 = 1F,
+                Point40 = 0F,
+                Point41 = 1F,
+                Point42 = 0F,
+                Point43 = 0F,
+                Point44 = 0F,
+                Point45 = 0F,
+                Point46 = 2F,
+                Point47 = 0F,
+                Point48 = 1F,
+                Point49 = 1F,
+                Point50 = 2F,
+                Point51 = 0F,
+                Point52 = 0F,
+                Point53 = 1F,
+                Point54 = 0F,
+                Point55 = 0F,
+                Point56 = 0F,
+                Point57 = 2F,
+                Point58 = 0F,
+                Point59 = 1F,
+                Point60 = 2F,
+                Point61 = 0F,
+                Point62 = 0F,
+                Point63 = 0F,
+                Point64 = 0F,
+                Point65 = 0F,
+                Point66 = 1F,
+                Point67 = 1F,
+                Point68 = 0F,
+                Point69 = 0F,
+                Point70 = 1F,
+                Point71 = 0F,
+                Point72 = 0F,
+                Point73 = 1F,
+                Point74 = 2F,
+                Point75 = 2F,
+                Point76 = 0F,
+                Point77 = 0F,
+                Point78 = 0F,
+                Point79 = 0F,
+                Point80 = 2F,
+                Point81 = 0F,
+                Point82 = 0F,
+                Point83 = 0F,
+                Point84 = 2F,
+                Point85 = 0F,
+                Point86 = 0F,
+                Point87 = 0F,
+                Point88 = 1F,
+                Point89 = 0F,
+                Point90 = 0F,
+                Point91 = 0F,
+                Point92 = 0F,
+                Point93 = 1F,
+                Point94 = 1F,
+                Point95 = 1F,
+                Point96 = 1F,
+                Point97 = 0F,
+                Point98 = 0F,
+                Point99 = 1F,
+                Point100 = 0F,
+                Point101 = 0F,
+                Point102 = 0F,
+                Point103 = 0F,
+                Point104 = 0F,
+                Point105 = 0F,
+                Point106 = 0F,
+                Point107 = 0F,
+                Point108 = 2F,
+                Point109 = 0F,
+                Point110 = 0F,
+                Point111 = 0F,
+                Point112 = 0F,
+                Point113 = 1F,
+                Point114 = 0F,
+                Point115 = 0F,
+                Point116 = 0F,
+                Point117 = 1F,
+                Point118 = 1F,
+                Point119 = 1F,
+                Point120 = 0F,
+                Point121 = 2F,
+                Point122 = 2F,
+                Point123 = 0F,
+                Point124 = 0F,
+                Point125 = 0F,
+                Point126 = 0F,
+                Point127 = 0F,
+                Point128 = 0F,
+                Point129 = 0F,
+                Point130 = 0F,
+                Point131 = 0F,
+                Point132 = 0F,
+                Point133 = 0F,
+                Point134 = 2F,
+                Point135 = 0F,
+                Point136 = 1F,
+                Point137 = 2F,
+                Point138 = 0F,
+                Point139 = 2F,
+                Point140 = 0F,
+                Point141 = 1F,
+                Point142 = 0F,
+                Point143 = 0F,
+                Point144 = 0F,
+                Point145 = 0F,
+                Point146 = 0F,
+                Point147 = 1F,
+                Point148 = 2F,
+                Point149 = 0F,
+                Point150 = 0F,
+                Point151 = 0F,
+                Point152 = 0F,
+                Point153 = 0F,
+                Point154 = 0F,
+                Point155 = 1F,
+                Point156 = 1F,
+                Point157 = 0F,
+                Point158 = 2F,
+                Point159 = 0F,
+                Point160 = 0F,
+                Point161 = 0F,
+                Point162 = 1F,
+                Point163 = 0F,
+                Point164 = 0F,
+                Point165 = 0F,
+                Point166 = 2F,
+                Point167 = 0F,
+                Point168 = 0F,
+                Point169 = 2F,
+                Point170 = 1F,
+                Point171 = 0F,
+                Point172 = 0F,
+                Point173 = 0F,
+                Point174 = 0F,
+                Point175 = 2F,
+                Point176 = 0F,
+                Point177 = 0F,
+                Point178 = 1F,
+                Point179 = 2F,
+                Point180 = 2F,
+                Point181 = 0F,
+                Point182 = 2F,
+                Point183 = 2F,
+                Point184 = 1F,
+                Point185 = 2F,
+                Point186 = 0F,
+                Point187 = 0F,
+                Point188 = 0F,
+                Point189 = 2F,
+                Point190 = 0F,
+                Point191 = 1F,
+                Point192 = 2F,
+                Point193 = 0F,
+                Point194 = 0F,
+                Point195 = 0F,
+                Point196 = 0F,
+                Point197 = 0F,
+                Point198 = 0F,
+                Point199 = 0F,
+                Point200 = 1F,
+                Point201 = 0F,
+                Point202 = 0F,
+                Point203 = 2F,
+                Point204 = 0F,
+                Point205 = 1F,
+                Point206 = 0F,
+                Point207 = 0F,
+                Point208 = 0F,
+                Point209 = 1F,
+                Point210 = 0F,
+                Point211 = 2F,
+                Point212 = 1F,
+                Point213 = 0F,
+                Point214 = 0F,
+                Point215 = 0F,
+                Point216 = 2F,
+                Point217 = 0F,
+                Point218 = 0F,
+                Point219 = 0F,
+                Point220 = 1F,
+                Point221 = 2F,
+                Point222 = 2F,
+                Point223 = 2F,
+                Point224 = 0F,
+                Point225 = 0F,
                 IsBlack = true,
-                Target = 89,
+                X = 12F,
+                Y = 6F,
             };
 
             // Make a single prediction on the sample data and print results
             var predictionResult = ConsumeModel.Predict(sampleData);
 
             Console.WriteLine("Using model to make single prediction -- Comparing actual IsWin with predicted IsWin from sample data...\n\n");
-            Console.WriteLine($"Map: {sampleData.Map}");
+            Console.WriteLine($"Point1: {sampleData.Point1}");
+            Console.WriteLine($"Point2: {sampleData.Point2}");
+            Console.WriteLine($"Point3: {sampleData.Point3}");
+            Console.WriteLine($"Point4: {sampleData.Point4}");
+            Console.WriteLine($"Point5: {sampleData.Point5}");
+            Console.WriteLine($"Point6: {sampleData.Point6}");
+            Console.WriteLine($"Point7: {sampleData.Point7}");
+            Console.WriteLine($"Point8: {sampleData.Point8}");
+            Console.WriteLine($"Point9: {sampleData.Point9}");
+            Console.WriteLine($"Point10: {sampleData.Point10}");
+            Console.WriteLine($"Point11: {sampleData.Point11}");
+            Console.WriteLine($"Point12: {sampleData.Point12}");
+            Console.WriteLine($"Point13: {sampleData.Point13}");
+            Console.WriteLine($"Point14: {sampleData.Point14}");
+            Console.WriteLine($"Point15: {sampleData.Point15}");
+            Console.WriteLine($"Point16: {sampleData.Point16}");
+            Console.WriteLine($"Point17: {sampleData.Point17}");
+            Console.WriteLine($"Point18: {sampleData.Point18}");
+            Console.WriteLine($"Point19: {sampleData.Point19}");
+            Console.WriteLine($"Point20: {sampleData.Point20}");
+            Console.WriteLine($"Point21: {sampleData.Point21}");
+            Console.WriteLine($"Point22: {sampleData.Point22}");
+            Console.WriteLine($"Point23: {sampleData.Point23}");
+            Console.WriteLine($"Point24: {sampleData.Point24}");
+            Console.WriteLine($"Point25: {sampleData.Point25}");
+            Console.WriteLine($"Point26: {sampleData.Point26}");
+            Console.WriteLine($"Point27: {sampleData.Point27}");
+            Console.WriteLine($"Point28: {sampleData.Point28}");
+            Console.WriteLine($"Point29: {sampleData.Point29}");
+            Console.WriteLine($"Point30: {sampleData.Point30}");
+            Console.WriteLine($"Point31: {sampleData.Point31}");
+            Console.WriteLine($"Point32: {sampleData.Point32}");
+            Console.WriteLine($"Point33: {sampleData.Point33}");
+            Console.WriteLine($"Point34: {sampleData.Point34}");
+            Console.WriteLine($"Point35: {sampleData.Point35}");
+            Console.WriteLine($"Point36: {sampleData.Point36}");
+            Console.WriteLine($"Point37: {sampleData.Point37}");
+            Console.WriteLine($"Point38: {sampleData.Point38}");
+            Console.WriteLine($"Point39: {sampleData.Point39}");
+            Console.WriteLine($"Point40: {sampleData.Point40}");
+            Console.WriteLine($"Point41: {sampleData.Point41}");
+            Console.WriteLine($"Point42: {sampleData.Point42}");
+            Console.WriteLine($"Point43: {sampleData.Point43}");
+            Console.WriteLine($"Point44: {sampleData.Point44}");
+            Console.WriteLine($"Point45: {sampleData.Point45}");
+            Console.WriteLine($"Point46: {sampleData.Point46}");
+            Console.WriteLine($"Point47: {sampleData.Point47}");
+            Console.WriteLine($"Point48: {sampleData.Point48}");
+            Console.WriteLine($"Point49: {sampleData.Point49}");
+            Console.WriteLine($"Point50: {sampleData.Point50}");
+            Console.WriteLine($"Point51: {sampleData.Point51}");
+            Console.WriteLine($"Point52: {sampleData.Point52}");
+            Console.WriteLine($"Point53: {sampleData.Point53}");
+            Console.WriteLine($"Point54: {sampleData.Point54}");
+            Console.WriteLine($"Point55: {sampleData.Point55}");
+            Console.WriteLine($"Point56: {sampleData.Point56}");
+            Console.WriteLine($"Point57: {sampleData.Point57}");
+            Console.WriteLine($"Point58: {sampleData.Point58}");
+            Console.WriteLine($"Point59: {sampleData.Point59}");
+            Console.WriteLine($"Point60: {sampleData.Point60}");
+            Console.WriteLine($"Point61: {sampleData.Point61}");
+            Console.WriteLine($"Point62: {sampleData.Point62}");
+            Console.WriteLine($"Point63: {sampleData.Point63}");
+            Console.WriteLine($"Point64: {sampleData.Point64}");
+            Console.WriteLine($"Point65: {sampleData.Point65}");
+            Console.WriteLine($"Point66: {sampleData.Point66}");
+            Console.WriteLine($"Point67: {sampleData.Point67}");
+            Console.WriteLine($"Point68: {sampleData.Point68}");
+            Console.WriteLine($"Point69: {sampleData.Point69}");
+            Console.WriteLine($"Point70: {sampleData.Point70}");
+            Console.WriteLine($"Point71: {sampleData.Point71}");
+            Console.WriteLine($"Point72: {sampleData.Point72}");
+            Console.WriteLine($"Point73: {sampleData.Point73}");
+            Console.WriteLine($"Point74: {sampleData.Point74}");
+            Console.WriteLine($"Point75: {sampleData.Point75}");
+            Console.WriteLine($"Point76: {sampleData.Point76}");
+            Console.WriteLine($"Point77: {sampleData.Point77}");
+            Console.WriteLine($"Point78: {sampleData.Point78}");
+            Console.WriteLine($"Point79: {sampleData.Point79}");
+            Console.WriteLine($"Point80: {sampleData.Point80}");
+            Console.WriteLine($"Point81: {sampleData.Point81}");
+            Console.WriteLine($"Point82: {sampleData.Point82}");
+            Console.WriteLine($"Point83: {sampleData.Point83}");
+            Console.WriteLine($"Point84: {sampleData.Point84}");
+            Console.WriteLine($"Point85: {sampleData.Point85}");
+            Console.WriteLine($"Point86: {sampleData.Point86}");
+            Console.WriteLine($"Point87: {sampleData.Point87}");
+            Console.WriteLine($"Point88: {sampleData.Point88}");
+            Console.WriteLine($"Point89: {sampleData.Point89}");
+            Console.WriteLine($"Point90: {sampleData.Point90}");
+            Console.WriteLine($"Point91: {sampleData.Point91}");
+            Console.WriteLine($"Point92: {sampleData.Point92}");
+            Console.WriteLine($"Point93: {sampleData.Point93}");
+            Console.WriteLine($"Point94: {sampleData.Point94}");
+            Console.WriteLine($"Point95: {sampleData.Point95}");
+            Console.WriteLine($"Point96: {sampleData.Point96}");
+            Console.WriteLine($"Point97: {sampleData.Point97}");
+            Console.WriteLine($"Point98: {sampleData.Point98}");
+            Console.WriteLine($"Point99: {sampleData.Point99}");
+            Console.WriteLine($"Point100: {sampleData.Point100}");
+            Console.WriteLine($"Point101: {sampleData.Point101}");
+            Console.WriteLine($"Point102: {sampleData.Point102}");
+            Console.WriteLine($"Point103: {sampleData.Point103}");
+            Console.WriteLine($"Point104: {sampleData.Point104}");
+            Console.WriteLine($"Point105: {sampleData.Point105}");
+            Console.WriteLine($"Point106: {sampleData.Point106}");
+            Console.WriteLine($"Point107: {sampleData.Point107}");
+            Console.WriteLine($"Point108: {sampleData.Point108}");
+            Console.WriteLine($"Point109: {sampleData.Point109}");
+            Console.WriteLine($"Point110: {sampleData.Point110}");
+            Console.WriteLine($"Point111: {sampleData.Point111}");
+            Console.WriteLine($"Point112: {sampleData.Point112}");
+            Console.WriteLine($"Point113: {sampleData.Point113}");
+            Console.WriteLine($"Point114: {sampleData.Point114}");
+            Console.WriteLine($"Point115: {sampleData.Point115}");
+            Console.WriteLine($"Point116: {sampleData.Point116}");
+            Console.WriteLine($"Point117: {sampleData.Point117}");
+            Console.WriteLine($"Point118: {sampleData.Point118}");
+            Console.WriteLine($"Point119: {sampleData.Point119}");
+            Console.WriteLine($"Point120: {sampleData.Point120}");
+            Console.WriteLine($"Point121: {sampleData.Point121}");
+            Console.WriteLine($"Point122: {sampleData.Point122}");
+            Console.WriteLine($"Point123: {sampleData.Point123}");
+            Console.WriteLine($"Point124: {sampleData.Point124}");
+            Console.WriteLine($"Point125: {sampleData.Point125}");
+            Console.WriteLine($"Point126: {sampleData.Point126}");
+            Console.WriteLine($"Point127: {sampleData.Point127}");
+            Console.WriteLine($"Point128: {sampleData.Point128}");
+            Console.WriteLine($"Point129: {sampleData.Point129}");
+            Console.WriteLine($"Point130: {sampleData.Point130}");
+            Console.WriteLine($"Point131: {sampleData.Point131}");
+            Console.WriteLine($"Point132: {sampleData.Point132}");
+            Console.WriteLine($"Point133: {sampleData.Point133}");
+            Console.WriteLine($"Point134: {sampleData.Point134}");
+            Console.WriteLine($"Point135: {sampleData.Point135}");
+            Console.WriteLine($"Point136: {sampleData.Point136}");
+            Console.WriteLine($"Point137: {sampleData.Point137}");
+            Console.WriteLine($"Point138: {sampleData.Point138}");
+            Console.WriteLine($"Point139: {sampleData.Point139}");
+            Console.WriteLine($"Point140: {sampleData.Point140}");
+            Console.WriteLine($"Point141: {sampleData.Point141}");
+            Console.WriteLine($"Point142: {sampleData.Point142}");
+            Console.WriteLine($"Point143: {sampleData.Point143}");
+            Console.WriteLine($"Point144: {sampleData.Point144}");
+            Console.WriteLine($"Point145: {sampleData.Point145}");
+            Console.WriteLine($"Point146: {sampleData.Point146}");
+            Console.WriteLine($"Point147: {sampleData.Point147}");
+            Console.WriteLine($"Point148: {sampleData.Point148}");
+            Console.WriteLine($"Point149: {sampleData.Point149}");
+            Console.WriteLine($"Point150: {sampleData.Point150}");
+            Console.WriteLine($"Point151: {sampleData.Point151}");
+            Console.WriteLine($"Point152: {sampleData.Point152}");
+            Console.WriteLine($"Point153: {sampleData.Point153}");
+            Console.WriteLine($"Point154: {sampleData.Point154}");
+            Console.WriteLine($"Point155: {sampleData.Point155}");
+            Console.WriteLine($"Point156: {sampleData.Point156}");
+            Console.WriteLine($"Point157: {sampleData.Point157}");
+            Console.WriteLine($"Point158: {sampleData.Point158}");
+            Console.WriteLine($"Point159: {sampleData.Point159}");
+            Console.WriteLine($"Point160: {sampleData.Point160}");
+            Console.WriteLine($"Point161: {sampleData.Point161}");
+            Console.WriteLine($"Point162: {sampleData.Point162}");
+            Console.WriteLine($"Point163: {sampleData.Point163}");
+            Console.WriteLine($"Point164: {sampleData.Point164}");
+            Console.WriteLine($"Point165: {sampleData.Point165}");
+            Console.WriteLine($"Point166: {sampleData.Point166}");
+            Console.WriteLine($"Point167: {sampleData.Point167}");
+            Console.WriteLine($"Point168: {sampleData.Point168}");
+            Console.WriteLine($"Point169: {sampleData.Point169}");
+            Console.WriteLine($"Point170: {sampleData.Point170}");
+            Console.WriteLine($"Point171: {sampleData.Point171}");
+            Console.WriteLine($"Point172: {sampleData.Point172}");
+            Console.WriteLine($"Point173: {sampleData.Point173}");
+            Console.WriteLine($"Point174: {sampleData.Point174}");
+            Console.WriteLine($"Point175: {sampleData.Point175}");
+            Console.WriteLine($"Point176: {sampleData.Point176}");
+            Console.WriteLine($"Point177: {sampleData.Point177}");
+            Console.WriteLine($"Point178: {sampleData.Point178}");
+            Console.WriteLine($"Point179: {sampleData.Point179}");
+            Console.WriteLine($"Point180: {sampleData.Point180}");
+            Console.WriteLine($"Point181: {sampleData.Point181}");
+            Console.WriteLine($"Point182: {sampleData.Point182}");
+            Console.WriteLine($"Point183: {sampleData.Point183}");
+            Console.WriteLine($"Point184: {sampleData.Point184}");
+            Console.WriteLine($"Point185: {sampleData.Point185}");
+            Console.WriteLine($"Point186: {sampleData.Point186}");
+            Console.WriteLine($"Point187: {sampleData.Point187}");
+            Console.WriteLine($"Point188: {sampleData.Point188}");
+            Console.WriteLine($"Point189: {sampleData.Point189}");
+            Console.WriteLine($"Point190: {sampleData.Point190}");
+            Console.WriteLine($"Point191: {sampleData.Point191}");
+            Console.WriteLine($"Point192: {sampleData.Point192}");
+            Console.WriteLine($"Point193: {sampleData.Point193}");
+            Console.WriteLine($"Point194: {sampleData.Point194}");
+            Console.WriteLine($"Point195: {sampleData.Point195}");
+            Console.WriteLine($"Point196: {sampleData.Point196}");
+            Console.WriteLine($"Point197: {sampleData.Point197}");
+            Console.WriteLine($"Point198: {sampleData.Point198}");
+            Console.WriteLine($"Point199: {sampleData.Point199}");
+            Console.WriteLine($"Point200: {sampleData.Point200}");
+            Console.WriteLine($"Point201: {sampleData.Point201}");
+            Console.WriteLine($"Point202: {sampleData.Point202}");
+            Console.WriteLine($"Point203: {sampleData.Point203}");
+            Console.WriteLine($"Point204: {sampleData.Point204}");
+            Console.WriteLine($"Point205: {sampleData.Point205}");
+            Console.WriteLine($"Point206: {sampleData.Point206}");
+            Console.WriteLine($"Point207: {sampleData.Point207}");
+            Console.WriteLine($"Point208: {sampleData.Point208}");
+            Console.WriteLine($"Point209: {sampleData.Point209}");
+            Console.WriteLine($"Point210: {sampleData.Point210}");
+            Console.WriteLine($"Point211: {sampleData.Point211}");
+            Console.WriteLine($"Point212: {sampleData.Point212}");
+            Console.WriteLine($"Point213: {sampleData.Point213}");
+            Console.WriteLine($"Point214: {sampleData.Point214}");
+            Console.WriteLine($"Point215: {sampleData.Point215}");
+            Console.WriteLine($"Point216: {sampleData.Point216}");
+            Console.WriteLine($"Point217: {sampleData.Point217}");
+            Console.WriteLine($"Point218: {sampleData.Point218}");
+            Console.WriteLine($"Point219: {sampleData.Point219}");
+            Console.WriteLine($"Point220: {sampleData.Point220}");
+            Console.WriteLine($"Point221: {sampleData.Point221}");
+            Console.WriteLine($"Point222: {sampleData.Point222}");
+            Console.WriteLine($"Point223: {sampleData.Point223}");
+            Console.WriteLine($"Point224: {sampleData.Point224}");
+            Console.WriteLine($"Point225: {sampleData.Point225}");
             Console.WriteLine($"IsBlack: {sampleData.IsBlack}");
-            Console.WriteLine($"Target: {sampleData.Target}");
+            Console.WriteLine($"X: {sampleData.X}");
+            Console.WriteLine($"Y: {sampleData.Y}");
             Console.WriteLine($"\n\nPredicted IsWin value {predictionResult.Prediction} \nPredicted IsWin scores: [{String.Join(",", predictionResult.Score)}]\n\n");
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();
