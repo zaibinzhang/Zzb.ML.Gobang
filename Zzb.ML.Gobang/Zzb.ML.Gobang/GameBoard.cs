@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Castle.Components.DictionaryAdapter;
 using Zzb.ML.Common;
@@ -386,47 +387,54 @@ namespace Zzb.ML.Gobang
 
         public void AutoGame()
         {
-            using var context = ZzbContext.CreateContext();
-            if (!context.Gobangs.Any())
+            new Task(() =>
             {
-                RandomGame();
-            }
-            else
-            {
-      
-                ModelBuilder.CreateModel();
-                ConsumeModel.Restart();
-                List<EF.Gobang> gobangs = new List<EF.Gobang>();
-
-                var temp = CalNext();
-                AddChessman(IndexToScreen(temp.X, temp.Y), color);
-                var gobangT = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
-                gobangT.SetPoint(map);
-                gobangs.Add(gobangT);
-                map[temp.X, temp.Y] = color;
-
-                while (!IsGameEnd(temp))
+                while (true)
                 {
-                    color = 3 - color;
-                    temp = CalNext();
-                    AddChessman(IndexToScreen(temp.X, temp.Y), color);
-                    var gobang = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
-                    gobang.SetPoint(map);
-                    gobangs.Add(gobang);
-                    map[temp.X, temp.Y] = color;
+                    ReStartGame();
+                    using var context = ZzbContext.CreateContext();
+                    if (!context.Gobangs.Any())
+                    {
+                        RandomGame();
+                    }
+                    else
+                    {
 
+                        ModelBuilder.CreateModel();
+                        ConsumeModel.Restart();
+                        List<EF.Gobang> gobangs = new List<EF.Gobang>();
+
+                        var temp = CalNext();
+                        AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                        var gobangT = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
+                        gobangT.SetPoint(map);
+                        gobangs.Add(gobangT);
+                        map[temp.X, temp.Y] = color;
+
+                        while (!IsGameEnd(temp))
+                        {
+                            color = 3 - color;
+                            temp = CalNext();
+                            AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                            var gobang = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
+                            gobang.SetPoint(map);
+                            gobangs.Add(gobang);
+                            map[temp.X, temp.Y] = color;
+
+                        }
+                        foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
+                        {
+                            gobang.IsWin = true;
+                        }
+                        context.Gobangs.AddRange(gobangs);
+                        context.SaveChanges();
+
+
+                        color = 1;
+                    }
                 }
-                foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
-                {
-                    gobang.IsWin = true;
-                }
-                context.Gobangs.AddRange(gobangs);
-                context.SaveChanges();
-                OnGameEnd(this, new GameEndEventArgs(color));
+            }).Start();
 
-
-                color = 1;
-            }
         }
 
         private static List<Point> _mapList;
@@ -472,10 +480,10 @@ namespace Zzb.ML.Gobang
 
                     var predictionResult = ConsumeModel.Predict(sampleData);
 
-                    if (predictionResult.Score[0] > f)
+                    if (predictionResult.Prediction)
                     {
                         f = predictionResult.Score[0];
-                        point = MapList[i];
+                        return MapList[i];
                     }
                 }
             }
