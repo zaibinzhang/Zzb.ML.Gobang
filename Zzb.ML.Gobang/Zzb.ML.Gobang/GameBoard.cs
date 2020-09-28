@@ -7,6 +7,7 @@ using Castle.Components.DictionaryAdapter;
 using Zzb.ML.Common;
 using Zzb.ML.EF;
 using Zzb.ML.GameComponent;
+using Zzb_ML_GobangML.ConsoleApp;
 using Zzb_ML_GobangML.Model;
 
 namespace Zzb.ML.Gobang
@@ -392,34 +393,39 @@ namespace Zzb.ML.Gobang
             }
             else
             {
-                //ModelBuilder.CreateModel();
+      
+                ModelBuilder.CreateModel();
+                ConsumeModel.Restart();
+                List<EF.Gobang> gobangs = new List<EF.Gobang>();
 
-                //List<EF.Gobang> gobangs = new List<EF.Gobang>();
+                var temp = CalNext();
+                AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                var gobangT = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
+                gobangT.SetPoint(map);
+                gobangs.Add(gobangT);
+                map[temp.X, temp.Y] = color;
 
-                //var temp = CalNext();
-                //AddChessman(IndexToScreen(temp.X, temp.Y), color);
-                //gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
-                //map[temp.X, temp.Y] = color;
+                while (!IsGameEnd(temp))
+                {
+                    color = 3 - color;
+                    temp = CalNext();
+                    AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                    var gobang = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
+                    gobang.SetPoint(map);
+                    gobangs.Add(gobang);
+                    map[temp.X, temp.Y] = color;
 
-                //while (!IsGameEnd(temp))
-                //{
-                //    color = 3 - color;
-                //    temp = CalNext();
-                //    AddChessman(IndexToScreen(temp.X, temp.Y), color);
-                //    gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
-                //    map[temp.X, temp.Y] = color;
-
-                //}
-                //foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
-                //{
-                //    gobang.IsWin = true;
-                //}
-                //context.Gobangs.AddRange(gobangs);
-                //context.SaveChanges();
-                //OnGameEnd(this, new GameEndEventArgs(color));
+                }
+                foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
+                {
+                    gobang.IsWin = true;
+                }
+                context.Gobangs.AddRange(gobangs);
+                context.SaveChanges();
+                OnGameEnd(this, new GameEndEventArgs(color));
 
 
-                //color = 1;
+                color = 1;
             }
         }
 
@@ -455,20 +461,22 @@ namespace Zzb.ML.Gobang
             {
                 if (map[MapList[i].X, MapList[i].Y] == 0)
                 {
-                    //ModelInput sampleData = new ModelInput()
-                    //{
-                    //    Map = map.ToMapString(),
-                    //    IsBlack = color == 1,
-                    //    Target = i,
-                    //};
+                    ModelInput sampleData = new ModelInput()
+                    {
+                        IsBlack = color == 1,
+                        X = MapList[i].X,
+                        Y = MapList[i].Y
+                    };
 
-                    //var predictionResult = ConsumeModel.Predict(sampleData);
+                    sampleData.SetPoint(map);
 
-                    //if (predictionResult.Score[1] > f)
-                    //{
-                    //    f = predictionResult.Score[1];
-                    //    point = MapList[i];
-                    //}
+                    var predictionResult = ConsumeModel.Predict(sampleData);
+
+                    if (predictionResult.Score[0] > f)
+                    {
+                        f = predictionResult.Score[0];
+                        point = MapList[i];
+                    }
                 }
             }
 
@@ -534,7 +542,7 @@ namespace Zzb.ML.Gobang
 
         }
 
-        
+
 
         /// <summary>
         /// 开始游戏

@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Zzb.ML.Common\Zzb.ML.Common.csproj" />
     <ProjectReference Include="..\Zzb.ML.EF\Zzb.ML.EF.csproj" />
     <ProjectReference Include="..\Zzb.ML.GameComponent\Zzb.ML.GameComponent.csproj" />
+    <ProjectReference Include="..\Zzb.ML.GobangML.ConsoleApp\Zzb.ML.GobangML.ConsoleApp.csproj" />
     <ProjectReference Include="..\Zzb.ML.GobangML.Model\Zzb.ML.GobangML.Model.csproj" />
   </ItemGroup>
 
