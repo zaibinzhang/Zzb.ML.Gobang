@@ -338,13 +338,18 @@ namespace Zzb.ML.Gobang
         /// <param name="color"></param>
         private void AddChessman(Point p, int color)
         {
-            Bitmap img = color == 1 ? blackChessImg : whiteChessImg;
-            Graphics g = Graphics.FromImage(this.BackgroundImage);
-            p.X = p.X - chessmanSize / 2;
-            p.Y = p.Y - chessmanSize / 2;
-            g.DrawImage(img, p.X, p.Y, chessmanSize, chessmanSize);
-            g.Dispose();
-            this.Invalidate();
+            lock (BackgroundImage)
+            {
+                Bitmap img = color == 1 ? blackChessImg : whiteChessImg;
+                using Graphics g = Graphics.FromImage(this.BackgroundImage);
+                p.X = p.X - chessmanSize / 2;
+                p.Y = p.Y - chessmanSize / 2;
+                g.DrawImage(img, p.X, p.Y, chessmanSize, chessmanSize);
+                g.Dispose();
+
+                this.Invalidate();
+            }
+
         }
 
         protected override void OnMouseClick(MouseEventArgs e)
@@ -405,21 +410,22 @@ namespace Zzb.ML.Gobang
                         List<EF.Gobang> gobangs = new List<EF.Gobang>();
 
                         var temp = CalNext();
-                        AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                        Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
                         var gobangT = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
                         gobangT.SetPoint(map);
                         gobangs.Add(gobangT);
-                        map[temp.X, temp.Y] = color;
+                        map[temp.Y, temp.X] = color;
 
                         while (!IsGameEnd(temp))
                         {
                             color = 3 - color;
                             temp = CalNext();
-                            AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                            Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
+
                             var gobang = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
                             gobang.SetPoint(map);
                             gobangs.Add(gobang);
-                            map[temp.X, temp.Y] = color;
+                            map[temp.Y, temp.X] = color;
 
                         }
                         foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
@@ -462,12 +468,13 @@ namespace Zzb.ML.Gobang
 
         public Point CalNext()
         {
-            Point point = new Point();
+            List<Point> list = new List<Point>();
             float f = 0;
+            Point point = new Point();
 
             for (int i = 0; i < MapList.Count; i++)
             {
-                if (map[MapList[i].X, MapList[i].Y] == 0)
+                if (map[MapList[i].Y, MapList[i].X] == 0)
                 {
                     ModelInput sampleData = new ModelInput()
                     {
@@ -476,14 +483,19 @@ namespace Zzb.ML.Gobang
                         Y = MapList[i].Y
                     };
 
+                    list.Add(MapList[i]);
+
                     sampleData.SetPoint(map);
 
                     var predictionResult = ConsumeModel.Predict(sampleData);
 
-                    if (predictionResult.Prediction)
+                    var temp = predictionResult.Prediction
+                        ? predictionResult.Score.Max()
+                        : predictionResult.Score.Min();
+                    if (temp > f)
                     {
                         f = predictionResult.Score[0];
-                        return MapList[i];
+                        point = MapList[i];
                     }
                 }
             }
@@ -508,8 +520,7 @@ namespace Zzb.ML.Gobang
             }
 
             Point temp = list[random.Next(list.Count)];
-            AddChessman(IndexToScreen(temp.X, temp.Y), color);
-
+            Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
             var gobangt = new EF.Gobang() { IsBlack = color == 1, X = temp.X, Y = temp.Y };
             gobangt.SetPoint(map);
             gobangs.Add(gobangt);
@@ -521,7 +532,7 @@ namespace Zzb.ML.Gobang
                 color = 3 - color;
                 var count = random.Next(list.Count);
                 temp = list[count];
-                AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
                 var gobang = new EF.Gobang() { IsBlack = color == 1, X = temp.X, Y = temp.Y };
                 gobang.SetPoint(map);
                 gobangs.Add(gobang);
