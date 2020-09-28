@@ -393,34 +393,34 @@ namespace Zzb.ML.Gobang
             }
             else
             {
-                ModelBuilder.CreateModel();
+                //ModelBuilder.CreateModel();
 
-                List<EF.Gobang> gobangs = new List<EF.Gobang>();
+                //List<EF.Gobang> gobangs = new List<EF.Gobang>();
 
-                var temp = CalNext();
-                AddChessman(IndexToScreen(temp.X, temp.Y), color);
-                gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
-                map[temp.X, temp.Y] = color;
+                //var temp = CalNext();
+                //AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                //gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
+                //map[temp.X, temp.Y] = color;
 
-                while (!IsGameEnd(temp))
-                {
-                    color = 3 - color;
-                    temp = CalNext();
-                    AddChessman(IndexToScreen(temp.X, temp.Y), color);
-                    gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
-                    map[temp.X, temp.Y] = color;
+                //while (!IsGameEnd(temp))
+                //{
+                //    color = 3 - color;
+                //    temp = CalNext();
+                //    AddChessman(IndexToScreen(temp.X, temp.Y), color);
+                //    gobangs.Add(new EF.Gobang() { Map = map.ToMapString(), IsBlack = (color == 1), Target = MapList.IndexOf(temp) });
+                //    map[temp.X, temp.Y] = color;
 
-                }
-                foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
-                {
-                    gobang.IsWin = true;
-                }
-                context.Gobangs.AddRange(gobangs);
-                context.SaveChanges();
-                OnGameEnd(this, new GameEndEventArgs(color));
+                //}
+                //foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
+                //{
+                //    gobang.IsWin = true;
+                //}
+                //context.Gobangs.AddRange(gobangs);
+                //context.SaveChanges();
+                //OnGameEnd(this, new GameEndEventArgs(color));
 
 
-                color = 1;
+                //color = 1;
             }
         }
 
@@ -494,6 +494,11 @@ namespace Zzb.ML.Gobang
 
             Point temp = list[random.Next(list.Count)];
             AddChessman(IndexToScreen(temp.X, temp.Y), color);
+
+            var gobangt = new EF.Gobang() { IsBlack = color == 1, X = temp.X, Y = temp.Y };
+            gobangt.SetPoint(map);
+            gobangs.Add(gobangt);
+
             map[temp.Y, temp.X] = color;
             list.Remove(temp);
             while (!IsGameEnd(temp) && list.Count != 0)
@@ -502,7 +507,9 @@ namespace Zzb.ML.Gobang
                 var count = random.Next(list.Count);
                 temp = list[count];
                 AddChessman(IndexToScreen(temp.X, temp.Y), color);
-                gobangs.Add(new EF.Gobang() { IsBlack = color == 1, Map = map.ToMapString(), Target = count });
+                var gobang = new EF.Gobang() { IsBlack = color == 1, X = temp.X, Y = temp.Y };
+                gobang.SetPoint(map);
+                gobangs.Add(gobang);
                 map[temp.Y, temp.X] = color;
                 list.Remove(temp);
             }
@@ -528,7 +535,7 @@ namespace Zzb.ML.Gobang
 
         }
 
-
+        
 
         /// <summary>
         /// 开始游戏
