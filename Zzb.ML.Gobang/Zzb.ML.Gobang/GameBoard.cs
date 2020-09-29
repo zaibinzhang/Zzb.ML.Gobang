@@ -434,13 +434,21 @@ namespace Zzb.ML.Gobang
                         {
                             gobang.IsWin = true;
                         }
-                        context.Gobangs.AddRange(gobangs);
-                        context.SaveChanges();
+
+                        new Task(() =>
+                        {
+                            using ZzbContext tempContext = ZzbContext.CreateContext();
+                            tempContext.Gobangs.AddRange(gobangs);
+                            tempContext.SaveChanges();
+                            ModelBuilder.IsUpdate = true;
+                        }).Start();
+
+
 
 
                         color = 1;
 
-                        ModelBuilder.IsUpdate = true;
+
                     }
                 }
             }).Start();
