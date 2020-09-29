@@ -13,6 +13,8 @@ namespace Zzb_ML_GobangML.Model
     {
         private static Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictionEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(CreatePredictionEngine);
 
+        public static object Lock = new object();
+
         public static void Restart()
         {
             PredictionEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(CreatePredictionEngine);
@@ -29,15 +31,18 @@ namespace Zzb_ML_GobangML.Model
 
         public static PredictionEngine<ModelInput, ModelOutput> CreatePredictionEngine()
         {
-            // Create new MLContext
-            MLContext mlContext = new MLContext();
+            lock (Lock)
+            {
+                // Create new MLContext
+                MLContext mlContext = new MLContext();
 
-            // Load model & create prediction engine
-            string modelPath = @"C:\Users\zaibi\AppData\Local\Temp\MLVSTools\Zzb.ML.GobangML\Zzb.ML.GobangML.Model\MLModel.zip";
-            ITransformer mlModel = mlContext.Model.Load(modelPath, out var modelInputSchema);
-            var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
+                // Load model & create prediction engine
+                string modelPath = @"C:\Users\zaibi\AppData\Local\Temp\MLVSTools\Zzb.ML.GobangML\Zzb.ML.GobangML.Model\MLModel.zip";
+                ITransformer mlModel = mlContext.Model.Load(modelPath, out var modelInputSchema);
+                var predEngine = mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(mlModel);
 
-            return predEngine;
+                return predEngine;
+            }
         }
     }
 }

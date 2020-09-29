@@ -21,6 +21,8 @@ namespace Zzb_ML_GobangML.ConsoleApp
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext();
 
+
+
         public static bool IsUpdate = true;
 
         public static void CreateModel()
@@ -60,8 +62,12 @@ namespace Zzb_ML_GobangML.ConsoleApp
                         // Evaluate quality of Model
                         Evaluate(mlContext, trainingDataView, trainingPipeline);
 
-                        // Save model
-                        SaveModel(mlContext, mlModel, MODEL_FILEPATH, trainingDataView.Schema);
+                        lock (ConsumeModel.Lock)
+                        {
+                            // Save model
+                            SaveModel(mlContext, mlModel, MODEL_FILEPATH, trainingDataView.Schema);
+                        }
+
 
                         IsUpdate = false;
                     }
