@@ -394,6 +394,8 @@ namespace Zzb.ML.Gobang
         {
             new Task(() =>
             {
+                ModelBuilder.CreateModel();
+
                 while (true)
                 {
                     ReStartGame();
@@ -405,7 +407,7 @@ namespace Zzb.ML.Gobang
                     else
                     {
 
-                        ModelBuilder.CreateModel();
+
                         ConsumeModel.Restart();
                         List<EF.Gobang> gobangs = new List<EF.Gobang>();
 
@@ -437,6 +439,8 @@ namespace Zzb.ML.Gobang
 
 
                         color = 1;
+
+                        ModelBuilder.IsUpdate = true;
                     }
                 }
             }).Start();
@@ -485,7 +489,7 @@ namespace Zzb.ML.Gobang
                         Y = MapList[i].Y
                     };
 
-              
+
 
                     sampleData.SetPoint(map);
 

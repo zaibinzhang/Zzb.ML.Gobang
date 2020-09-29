@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.ML;
 using Microsoft.ML.Data;
@@ -19,39 +21,54 @@ namespace Zzb_ML_GobangML.ConsoleApp
         // Set a random seed for repeatable/deterministic results across multiple trainings.
         private static MLContext mlContext = new MLContext();
 
+        public static bool IsUpdate = true;
+
         public static void CreateModel()
         {
-            DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<ModelInput>();
+            new Task(() =>
+            {
+                while (true)
+                {
+                    if (IsUpdate)
+                    {
+                        DatabaseLoader loader = mlContext.Data.CreateDatabaseLoader<ModelInput>();
 
-            string connectionString = @"Data Source=.;Database=ML;Integrated Security=True;Connect Timeout=30";
+                        string connectionString = @"Data Source=.;Database=ML;Integrated Security=True;Connect Timeout=30";
 
-            string sqlCommand = @"SELECT *
+                        string sqlCommand = @"SELECT *
             FROM[ML].[dbo].[Gobangs]";
 
-            DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, connectionString, sqlCommand);
+                        DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, connectionString, sqlCommand);
 
-            IDataView trainingDataView = loader.Load(dbSource);
+                        IDataView trainingDataView = loader.Load(dbSource);
 
 
-            // Load Data
-            //IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
-            //                                path: TRAIN_DATA_FILEPATH,
-            //                                hasHeader: true,
-            //                                separatorChar: '\t',
-            //                                allowQuoting: true,
-            //                                allowSparse: false);
+                        // Load Data
+                        //IDataView trainingDataView = mlContext.Data.LoadFromTextFile<ModelInput>(
+                        //                                path: TRAIN_DATA_FILEPATH,
+                        //                                hasHeader: true,
+                        //                                separatorChar: '\t',
+                        //                                allowQuoting: true,
+                        //                                allowSparse: false);
 
-            // Build training pipeline
-            IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(mlContext);
+                        // Build training pipeline
+                        IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(mlContext);
 
-            // Train Model
-            ITransformer mlModel = TrainModel(mlContext, trainingDataView, trainingPipeline);
+                        // Train Model
+                        ITransformer mlModel = TrainModel(mlContext, trainingDataView, trainingPipeline);
 
-            // Evaluate quality of Model
-            Evaluate(mlContext, trainingDataView, trainingPipeline);
+                        // Evaluate quality of Model
+                        Evaluate(mlContext, trainingDataView, trainingPipeline);
 
-            // Save model
-            SaveModel(mlContext, mlModel, MODEL_FILEPATH, trainingDataView.Schema);
+                        // Save model
+                        SaveModel(mlContext, mlModel, MODEL_FILEPATH, trainingDataView.Schema);
+
+                        IsUpdate = false;
+                    }
+                    Thread.Sleep(1000);
+                }
+
+            }).Start();
         }
 
         public static IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)
