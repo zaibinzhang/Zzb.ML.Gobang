@@ -521,7 +521,8 @@ namespace Zzb.ML.Gobang
 
             if (list.Count == 0)
             {
-                return new Random().NextDouble() > 0.5 ? point : point1;
+                //return new Random().NextDouble() > 0.5 ? point : point1;
+                return point;
             }
 
             return list[new Random().Next(list.Count)];
