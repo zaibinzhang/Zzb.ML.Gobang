@@ -409,13 +409,14 @@ namespace Zzb.ML.Gobang
 
 
                         ConsumeModel.Restart();
-                        List<EF.Gobang> gobangs = new List<EF.Gobang>();
+                        MirrorGobang mirror = new MirrorGobang();
 
                         var temp = CalNext();
                         Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
-                        var gobangT = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
-                        gobangT.SetPoint(map);
-                        gobangs.Add(gobangT);
+
+
+                        mirror.AddPoint(map, temp, color == 1);
+
                         map[temp.Y, temp.X] = color;
 
                         while (!IsGameEnd(temp))
@@ -424,26 +425,14 @@ namespace Zzb.ML.Gobang
                             temp = CalNext();
                             Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
 
-                            var gobang = new EF.Gobang() { IsBlack = (color == 1), X = temp.X, Y = temp.Y };
-                            gobang.SetPoint(map);
-                            gobangs.Add(gobang);
+                            mirror.AddPoint(map, temp, color == 1);
+
                             map[temp.Y, temp.X] = color;
 
                         }
-                        foreach (EF.Gobang gobang in gobangs.Where(t => t.IsBlack == (color == 1)))
-                        {
-                            gobang.IsWin = true;
-                        }
-
-                        new Task(() =>
-                        {
-                            using ZzbContext tempContext = ZzbContext.CreateContext();
-                            tempContext.Gobangs.AddRange(gobangs);
-                            tempContext.SaveChanges();
-                            ModelBuilder.IsUpdate = true;
-                        }).Start();
 
 
+                        mirror.WinAndSave(color == 1);
 
 
                         color = 1;
