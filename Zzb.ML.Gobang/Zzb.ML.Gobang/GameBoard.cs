@@ -8,6 +8,7 @@ using Castle.Components.DictionaryAdapter;
 using Zzb.ML.Common;
 using Zzb.ML.EF;
 using Zzb.ML.GameComponent;
+using Zzb.ML.Gobang.AI;
 using Zzb_ML_GobangML.ConsoleApp;
 using Zzb_ML_GobangML.Model;
 
@@ -45,7 +46,7 @@ namespace Zzb.ML.Gobang
         //判断棋子颜色,1表示黑棋，2表示白棋
         private int color = 1;
         //游戏落子记录表，0表示空，1表示黑棋，2表示白棋
-        private int[,] map = new int[gameSize, gameSize];
+        public int[,] map = new int[gameSize, gameSize];
         //横向计数
         private int hSum;
         //纵向计数
@@ -318,7 +319,7 @@ namespace Zzb.ML.Gobang
         /// </summary>
         /// <param name="p">内部坐标点</param>
         /// <returns></returns>
-        private bool IsGameEnd(Point p)
+        public bool IsGameEnd(Point p)
         {
             AllDirectionsCount(p.X, p.Y, color);
             if (hSum >= 5 || vSum >= 5 || lSum >= 5 || rSum >= 5)
@@ -395,50 +396,75 @@ namespace Zzb.ML.Gobang
             new Task(() =>
             {
                 ModelBuilder.CreateModel();
-
+                GameBoard board = new GameBoard();
+                MonteCarloTreeSearch.IsWin = (map, point, isBlack) =>
+                {
+                    GameBoard board = new GameBoard();
+                    board.map = map;
+                    board.map[point.Y, point.X] = isBlack ? 1 : 2;
+                    var b = board.IsGameEnd(point);
+                    board.map[point.Y, point.X] = 0;
+                    return b;
+                };
                 while (true)
                 {
                     ReStartGame();
-                    using var context = ZzbContext.CreateContext();
-                    if (!context.Gobangs.Any())
+
+
+
+                    MonteCarloTreeSearch tree = new MonteCarloTreeSearch();
+                    var temp = new Point(0, 0);
+                    while (!IsGameEnd(temp))
                     {
-                        RandomGame();
-                    }
-                    else
-                    {
 
-
-                        ConsumeModel.Restart();
-                        MirrorGobang mirror = new MirrorGobang();
-
-                        var temp = CalNext();
+                        temp = tree.CalNext(map, color == 1);
                         Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
 
-
-                        mirror.AddPoint(map, temp, color == 1);
-
                         map[temp.Y, temp.X] = color;
-
-                        while (!IsGameEnd(temp))
-                        {
-                            color = 3 - color;
-                            temp = CalNext();
-                            Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
-
-                            mirror.AddPoint(map, temp, color == 1);
-
-                            map[temp.Y, temp.X] = color;
-
-                        }
-
-
-                        mirror.WinAndSave(color == 1);
-
-
-                        color = 1;
-
-
+                        color = 3 - color;
                     }
+
+                    color = 1;
+                    //using var context = ZzbContext.CreateContext();
+                    //if (!context.Gobangs.Any())
+                    //{
+                    //    RandomGame();
+                    //}
+                    //else
+                    //{
+
+
+                    //    ConsumeModel.Restart();
+                    //    MirrorGobang mirror = new MirrorGobang();
+
+                    //    var temp = CalNext();
+                    //    Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
+
+
+                    //    mirror.AddPoint(map, temp, color == 1);
+
+                    //    map[temp.Y, temp.X] = color;
+
+                    //    while (!IsGameEnd(temp))
+                    //    {
+                    //        color = 3 - color;
+                    //        temp = CalNext();
+                    //        Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
+
+                    //        mirror.AddPoint(map, temp, color == 1);
+
+                    //        map[temp.Y, temp.X] = color;
+
+                    //    }
+
+
+                    //    mirror.WinAndSave(color == 1);
+
+
+                    //    color = 1;
+
+
+                    //}
                 }
             }).Start();
 
