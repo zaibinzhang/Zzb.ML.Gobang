@@ -395,7 +395,7 @@ namespace Zzb.ML.Gobang
         {
             new Task(() =>
             {
-                ModelBuilder.CreateModel();
+                //ModelBuilder.CreateModel();
                 GameBoard board = new GameBoard();
                 MonteCarloTreeSearch.IsWin = (map, point, isBlack) =>
                 {
