@@ -14,6 +14,9 @@ namespace Zzb.ML.Gobang.AI
         private static MonteCarloTree _currentTree;
 
         public static Func<int[,], Point, bool, bool> IsWin;
+
+        private static List<MonteCarloTree> _list = new List<MonteCarloTree>();
+
         public Point CalNext(int[,] map, bool isBlack)
         {
             if (_currentTree == null)
@@ -23,27 +26,32 @@ namespace Zzb.ML.Gobang.AI
 
             DateTime dt = DateTime.Now;
 
-            bool[] isEnd = new bool[10];
-            for (int i = 0; i < isEnd.Length; i++)
+    
+            while (dt.AddSeconds(5) > DateTime.Now)
             {
-                isEnd[i] = false;
-                new Task((t) =>
-                {
-                    int tt = (int)t;
-                    while (dt.AddSeconds(5) > DateTime.Now)
-                    {
-                        Run(map, isBlack, _currentTree);
-                    }
-
-                    isEnd[tt] = true;
-                }, i).Start();
-
+                Run(map, isBlack, _currentTree);
             }
+            //bool[] isEnd = new bool[10];
+            //for (int i = 0; i < isEnd.Length; i++)
+            //{
+            //    isEnd[i] = false;
+            //    new Task((t) =>
+            //    {
+            //        int tt = (int)t;
+            //        while (dt.AddSeconds(5) > DateTime.Now)
+            //        {
+            //            Run(map, isBlack, _currentTree);
+            //        }
 
-            while (isEnd.Any(t => !t))
-            {
-                Thread.Sleep(100);
-            }
+            //        isEnd[tt] = true;
+            //    }, i).Start();
+
+            //}
+
+            //while (isEnd.Any(t => !t))
+            //{
+            //    Thread.Sleep(100);
+            //}
 
             var tree = _currentTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
 
@@ -70,6 +78,7 @@ namespace Zzb.ML.Gobang.AI
                     {
                         var one = new MonteCarloTree { ParentTree = tempTree, X = point.X, Y = point.Y, IsBlack = isBlack };
                         tempTree.Trees.Add(one);
+                        _list.Add(one);
                     }
                 }
             }

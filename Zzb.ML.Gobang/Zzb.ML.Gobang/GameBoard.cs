@@ -399,12 +399,17 @@ namespace Zzb.ML.Gobang
                 GameBoard board = new GameBoard();
                 MonteCarloTreeSearch.IsWin = (map, point, isBlack) =>
                 {
-                    GameBoard board = new GameBoard();
-                    board.map = map;
-                    board.map[point.Y, point.X] = isBlack ? 1 : 2;
-                    var b = board.IsGameEnd(point);
-                    board.map[point.Y, point.X] = 0;
-                    return b;
+                    lock (board)
+                    {
+                        board.map = map;
+                        board.map[point.Y, point.X] = isBlack ? 1 : 2;
+                        var b = board.IsGameEnd(point);
+                        board.map[point.Y, point.X] = 0;
+
+                        return b;
+
+                    }
+                  
                 };
                 while (true)
                 {
