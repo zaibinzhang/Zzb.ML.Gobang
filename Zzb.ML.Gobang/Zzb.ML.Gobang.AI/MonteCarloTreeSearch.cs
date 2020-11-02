@@ -25,7 +25,7 @@ namespace Zzb.ML.Gobang.AI
             DateTime dt = DateTime.Now;
 
 
-            while (dt.AddSeconds(5) > DateTime.Now)
+            while (dt.AddSeconds(2) > DateTime.Now)
             {
                 Run(map, isBlack, _currentTree);
             }
@@ -93,9 +93,15 @@ namespace Zzb.ML.Gobang.AI
 
             if (maxUCT != null)
             {
-               
+
                 if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
                 {
+                    if (maxUCT.IsBlack)
+                    {
+                        return;
+                    }
+
+                    maxUCT.IsBlack = true;
                     BackLoad(maxUCT, isBlack);
                     return;
                 }

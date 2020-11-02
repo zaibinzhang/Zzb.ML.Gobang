@@ -38,5 +38,6 @@ namespace Zzb.ML.Gobang.AI
 
         public bool IsBlack { get; set; }
 
+        public bool IsEnd { get; set; } = false;
     }
 }
