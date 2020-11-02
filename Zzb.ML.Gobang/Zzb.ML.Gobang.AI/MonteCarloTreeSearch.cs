@@ -75,12 +75,13 @@ namespace Zzb.ML.Gobang.AI
 
                 if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
                 {
-                    if (maxUCT.IsBlack)
+                    if (maxUCT.IsEnd)
                     {
                         return;
                     }
 
-                    maxUCT.IsBlack = true;
+                    MonteCarloTree.AllCount++;
+                    maxUCT.IsEnd = true;
                     BackLoad(maxUCT, isBlack);
                     return;
                 }

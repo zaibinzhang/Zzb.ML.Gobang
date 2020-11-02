@@ -5,6 +5,8 @@ namespace Zzb.ML.Gobang.AI
 {
     public class MonteCarloTree
     {
+        public static long AllCount { get; set; } = 0;
+
         public double UCT
         {
             get
@@ -14,20 +16,7 @@ namespace Zzb.ML.Gobang.AI
                     return 0.5;
                 }
 
-                return (double)this.Win / this.Count + Math.Sqrt(Math.Log((double)ParentCount / Count));
-            }
-        }
-
-        public long ParentCount
-        {
-            get
-            {
-                if (ParentTree?.ParentTree == null)
-                {
-                    return 0;
-                }
-
-                return ParentTree.ParentTree.Count;
+                return (double)this.Win / this.Count + Math.Sqrt(Math.Log(AllCount) / Count);
             }
         }
 
