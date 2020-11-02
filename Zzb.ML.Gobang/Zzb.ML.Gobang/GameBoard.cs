@@ -397,20 +397,6 @@ namespace Zzb.ML.Gobang
             {
                 //ModelBuilder.CreateModel();
                 GameBoard board = new GameBoard();
-                MonteCarloTreeSearch.IsWin = (map, point, isBlack) =>
-                {
-                    lock (board)
-                    {
-                        board.map = map;
-                        board.map[point.Y, point.X] = isBlack ? 1 : 2;
-                        var b = board.IsGameEnd(point);
-                        board.map[point.Y, point.X] = 0;
-
-                        return b;
-
-                    }
-                  
-                };
                 while (true)
                 {
                     ReStartGame();

@@ -13,8 +13,6 @@ namespace Zzb.ML.Gobang.AI
 
         private static MonteCarloTree _currentTree;
 
-        public static Func<int[,], Point, bool, bool> IsWin;
-
         private static List<MonteCarloTree> _list = new List<MonteCarloTree>();
 
         public Point CalNext(int[,] map, bool isBlack)
@@ -26,7 +24,7 @@ namespace Zzb.ML.Gobang.AI
 
             DateTime dt = DateTime.Now;
 
-    
+
             while (dt.AddSeconds(5) > DateTime.Now)
             {
                 Run(map, isBlack, _currentTree);
@@ -91,7 +89,7 @@ namespace Zzb.ML.Gobang.AI
 
             if (maxUCT != null)
             {
-                if (IsWin(map, new Point(maxUCT.X, maxUCT.Y), isBlack))
+                if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
                 {
                     BackLoad(maxUCT, isBlack);
                     return;
