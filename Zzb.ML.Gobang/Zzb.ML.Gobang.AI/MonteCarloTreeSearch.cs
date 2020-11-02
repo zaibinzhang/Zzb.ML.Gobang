@@ -81,14 +81,19 @@ namespace Zzb.ML.Gobang.AI
                 }
             }
 
-            var temp = tempTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
+            var maxUCT = tempTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
 
-            var temps = tempTree.Trees.Where(t => t.UCT == temp.UCT);
+            if (maxUCT.UCT == 0.5)
+            {
+                var temps = tempTree.Trees.Where(t => t.UCT == maxUCT.UCT);
 
-            var maxUCT = temps.ToArray()[new Random().Next(temps.Count())];
+                maxUCT = temps.ToArray()[new Random().Next(temps.Count())];
+            }
+
 
             if (maxUCT != null)
             {
+               
                 if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
                 {
                     BackLoad(maxUCT, isBlack);
