@@ -30,7 +30,7 @@ namespace Zzb.ML.Gobang.AI
                 Run(map, isBlack, _currentTree);
             }
 
-            var tree = _currentTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
+            var tree = _currentTree.Trees.OrderByDescending(t => (double)t.Win / t.Count).FirstOrDefault();
 
             if (tree != null)
             {

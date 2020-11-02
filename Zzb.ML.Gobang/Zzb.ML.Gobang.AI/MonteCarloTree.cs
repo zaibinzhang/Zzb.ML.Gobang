@@ -16,7 +16,7 @@ namespace Zzb.ML.Gobang.AI
                     return 0.5;
                 }
 
-                return (double)this.Win / this.Count + Math.Sqrt(Math.Log(AllCount) / Count);
+                return (double)this.Win / this.Count + Math.Sqrt(Math.Log10(AllCount) / Count);
             }
         }
 
