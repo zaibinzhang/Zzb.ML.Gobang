@@ -25,31 +25,10 @@ namespace Zzb.ML.Gobang.AI
             DateTime dt = DateTime.Now;
 
 
-            while (dt.AddSeconds(2) > DateTime.Now)
+            while (dt.AddSeconds(1) > DateTime.Now)
             {
                 Run(map, isBlack, _currentTree);
             }
-            //bool[] isEnd = new bool[10];
-            //for (int i = 0; i < isEnd.Length; i++)
-            //{
-            //    isEnd[i] = false;
-            //    new Task((t) =>
-            //    {
-            //        int tt = (int)t;
-            //        while (dt.AddSeconds(5) > DateTime.Now)
-            //        {
-            //            Run(map, isBlack, _currentTree);
-            //        }
-
-            //        isEnd[tt] = true;
-            //    }, i).Start();
-
-            //}
-
-            //while (isEnd.Any(t => !t))
-            //{
-            //    Thread.Sleep(100);
-            //}
 
             var tree = _currentTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
 

@@ -14,7 +14,20 @@ namespace Zzb.ML.Gobang.AI
                     return 0.5;
                 }
 
-                return (double)this.Win / this.Count + 2 * Math.Sqrt(Math.Log(this.ParentTree.Count) / this.Count);
+                return (double)this.Win / this.Count + Math.Sqrt(Math.Log((double)ParentCount / Count));
+            }
+        }
+
+        public long ParentCount
+        {
+            get
+            {
+                if (ParentTree?.ParentTree == null)
+                {
+                    return 0;
+                }
+
+                return ParentTree.ParentTree.Count;
             }
         }
 
