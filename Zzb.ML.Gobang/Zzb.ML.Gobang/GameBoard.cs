@@ -395,8 +395,6 @@ namespace Zzb.ML.Gobang
         {
             new Task(() =>
             {
-                //ModelBuilder.CreateModel();
-                GameBoard board = new GameBoard();
                 while (true)
                 {
                     ReStartGame();
@@ -404,15 +402,14 @@ namespace Zzb.ML.Gobang
 
 
                     MonteCarloTreeSearch tree = new MonteCarloTreeSearch();
-                    var temp = new Point(0, 0);
+                    var temp = tree.CalNext(map, color == 1);
                     while (!IsGameEnd(temp))
                     {
-
-                        temp = tree.CalNext(map, color == 1);
                         Invoke(new EventHandler(delegate { AddChessman(IndexToScreen(temp.X, temp.Y), color); }));
 
                         map[temp.Y, temp.X] = color;
                         color = 3 - color;
+                        temp = tree.CalNext(map, color == 1);
                     }
 
                     color = 1;

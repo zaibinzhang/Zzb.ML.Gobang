@@ -13,7 +13,9 @@ namespace Zzb.ML.Gobang.AI
 
         private static MonteCarloTree _currentTree;
 
-        private static List<MonteCarloTree> _list = new List<MonteCarloTree>();
+        private static long _treeCount = 0;
+
+        //private static List<MonteCarloTree> _list = new List<MonteCarloTree>();
 
         public Point CalNext(int[,] map, bool isBlack)
         {
@@ -30,15 +32,15 @@ namespace Zzb.ML.Gobang.AI
                 Run(map, isBlack, _currentTree);
             }
 
-            var tree = _currentTree.Trees.FirstOrDefault(t => t.IsEnd && t.Win == t.Count);
+            //var tree = _currentTree.Trees.FirstOrDefault(t => t.IsEnd && t.Win == t.Count);
 
-            if (tree != null)
-            {
-                _currentTree = tree;
-                return new Point(tree.X, tree.Y);
-            }
+            //if (tree != null)
+            //{
+            //    _currentTree = tree;
+            //    return new Point(tree.X, tree.Y);
+            //}
 
-            tree = _currentTree.Trees.OrderByDescending(t => (double)t.Win / t.Count).FirstOrDefault();
+            var tree = _currentTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
 
             if (tree != null)
             {
@@ -63,12 +65,13 @@ namespace Zzb.ML.Gobang.AI
                     {
                         var one = new MonteCarloTree { ParentTree = tempTree, X = point.X, Y = point.Y, IsBlack = isBlack };
                         tempTree.Trees.Add(one);
-                        _list.Add(one);
+                        _treeCount++;
+                        //_list.Add(one);
                     }
                 }
             }
 
-            var maxUCT = tempTree.Trees.Where(t => !t.IsEnd).OrderByDescending(t => t.UCT).FirstOrDefault();
+            var maxUCT = tempTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
 
             if (maxUCT.UCT == 0.5)
             {
@@ -83,14 +86,15 @@ namespace Zzb.ML.Gobang.AI
 
                 if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
                 {
-                    if (maxUCT.IsEnd)
-                    {
-                        return;
-                    }
+                    //if (maxUCT.IsEnd)
+                    //{
+                    //    return;
+                    //}
+
+                    //maxUCT.IsEnd = true;
 
                     MonteCarloTree.AllCount++;
-                    maxUCT.IsEnd = true;
-                    maxUCT.ParentTree.ParentTree.IsEnd = true;
+                    //maxUCT.ParentTree.ParentTree.IsEnd = true;
                     BackLoad(maxUCT, isBlack);
                     return;
                 }
@@ -109,13 +113,13 @@ namespace Zzb.ML.Gobang.AI
         {
             if (tree != null)
             {
-                if (tree.IsEnd && tree.ParentTree?.ParentTree != null)
-                {
-                    if (tree.ParentTree.Trees.All(t => t.IsEnd))
-                    {
-                        tree.ParentTree.ParentTree.IsEnd = true;
-                    }
-                }
+                //if (tree.IsEnd && tree.ParentTree?.ParentTree != null)
+                //{
+                //    if (tree.ParentTree.Trees.All(t => t.IsEnd))
+                //    {
+                //        tree.ParentTree.ParentTree.IsEnd = true;
+                //    }
+                //}
                 tree.Count++;
                 if (tree.IsBlack == isBlack)
                 {
