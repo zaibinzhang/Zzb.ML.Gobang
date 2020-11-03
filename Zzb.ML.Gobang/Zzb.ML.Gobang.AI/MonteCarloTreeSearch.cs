@@ -30,7 +30,15 @@ namespace Zzb.ML.Gobang.AI
                 Run(map, isBlack, _currentTree);
             }
 
-            var tree = _currentTree.Trees.OrderByDescending(t => (double)t.Win / t.Count).FirstOrDefault();
+            var tree = _currentTree.Trees.FirstOrDefault(t => t.IsEnd && t.Win == t.Count);
+
+            if (tree != null)
+            {
+                _currentTree = tree;
+                return new Point(tree.X, tree.Y);
+            }
+
+            tree = _currentTree.Trees.OrderByDescending(t => (double)t.Win / t.Count).FirstOrDefault();
 
             if (tree != null)
             {
@@ -60,7 +68,7 @@ namespace Zzb.ML.Gobang.AI
                 }
             }
 
-            var maxUCT = tempTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
+            var maxUCT = tempTree.Trees.Where(t => !t.IsEnd).OrderByDescending(t => t.UCT).FirstOrDefault();
 
             if (maxUCT.UCT == 0.5)
             {
@@ -82,6 +90,7 @@ namespace Zzb.ML.Gobang.AI
 
                     MonteCarloTree.AllCount++;
                     maxUCT.IsEnd = true;
+                    maxUCT.ParentTree.ParentTree.IsEnd = true;
                     BackLoad(maxUCT, isBlack);
                     return;
                 }
@@ -90,12 +99,23 @@ namespace Zzb.ML.Gobang.AI
                 Run(map, !isBlack, maxUCT);
                 map[maxUCT.Y, maxUCT.X] = 0;
             }
+            else
+            {
+                throw new Exception("找不到下一步");
+            }
         }
 
         private void BackLoad(MonteCarloTree tree, bool isBlack)
         {
             if (tree != null)
             {
+                if (tree.IsEnd && tree.ParentTree?.ParentTree != null)
+                {
+                    if (tree.ParentTree.Trees.All(t => t.IsEnd))
+                    {
+                        tree.ParentTree.ParentTree.IsEnd = true;
+                    }
+                }
                 tree.Count++;
                 if (tree.IsBlack == isBlack)
                 {
