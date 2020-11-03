@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Zzb.ML.Gobang.AI
 {
@@ -41,5 +42,7 @@ namespace Zzb.ML.Gobang.AI
         public bool IsBlack { get; set; }
 
         public bool IsEnd { get; set; } = false;
+
+        public List<Point> ListPoints = new List<Point>();
     }
 }

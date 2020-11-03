@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Zzb.ML.Gobang.AI
 {
@@ -55,58 +53,85 @@ namespace Zzb.ML.Gobang.AI
         {
             tempTree ??= _tree;
 
-            lock (_tree)
-            {
-                var list = GetEmptyPoints(map);
+            //lock (_tree)
+            //{
+            //    var list = GetEmptyPoints(map);
 
-                if (!tempTree.Trees.Any())
-                {
-                    foreach (var point in list)
-                    {
-                        var one = new MonteCarloTree { ParentTree = tempTree, X = point.X, Y = point.Y, IsBlack = isBlack };
-                        tempTree.Trees.Add(one);
-                        _treeCount++;
-                        //_list.Add(one);
-                    }
-                }
-            }
+            //    if (!tempTree.Trees.Any())
+            //    {
+            //        foreach (var point in list)
+            //        {
+            //            var one = new MonteCarloTree { ParentTree = tempTree, X = point.X, Y = point.Y, IsBlack = isBlack };
+            //            tempTree.Trees.Add(one);
+            //            _treeCount++;
+            //            //_list.Add(one);
+            //        }
+            //    }
+            //}
 
             var maxUCT = tempTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
 
-            if (maxUCT.UCT == 0.5)
+            //if (maxUCT.UCT == 0.5)
+            //{
+            //    var temps = tempTree.Trees.Where(t => t.UCT == maxUCT.UCT);
+
+            //    maxUCT = temps.ToArray()[new Random().Next(temps.Count())];
+            //}
+            if (maxUCT == null || maxUCT.UCT < 0.5)
             {
-                var temps = tempTree.Trees.Where(t => t.UCT == maxUCT.UCT);
+                var list = GetEmptyPoints(map);
+                var temps = (from l in list from t in tempTree.Trees where t.X == l.X && t.Y == l.Y select l).ToList();
 
-                maxUCT = temps.ToArray()[new Random().Next(temps.Count())];
-            }
-
-
-            if (maxUCT != null)
-            {
-
-                if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
+                foreach (var point in temps)
                 {
-                    //if (maxUCT.IsEnd)
-                    //{
-                    //    return;
-                    //}
-
-                    //maxUCT.IsEnd = true;
-
-                    MonteCarloTree.AllCount++;
-                    //maxUCT.ParentTree.ParentTree.IsEnd = true;
-                    BackLoad(maxUCT, isBlack);
-                    return;
+                    list.Remove(point);
                 }
 
-                map[maxUCT.Y, maxUCT.X] = isBlack ? 1 : 2;
-                Run(map, !isBlack, maxUCT);
-                map[maxUCT.Y, maxUCT.X] = 0;
+                var temp = list[new Random().Next(list.Count())];
+                var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack };
+                tempTree.Trees.Add(one);
+                maxUCT = one;
+                _treeCount++;
+
             }
-            else
+            //if (maxUCT != null && maxUCT.UCT < 0.5)
+            //{
+            //    var temp = maxUCT.ListPoints[new Random().Next(maxUCT.ListPoints.Count())];
+            //    maxUCT.ListPoints.Remove(temp);
+            //    var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ListPoints = list };
+            //    tempTree.Trees.Add(one);
+            //}
+
+            //if (maxUCT == null)
+            //{
+            //    var list = GetEmptyPoints(map);
+
+            //    var temp = list[new Random().Next(list.Count())];
+            //    list.Remove(temp);
+            //    var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ListPoints = list };
+            //    tempTree.Trees.Add(one);
+            //    maxUCT = one;
+            //    _treeCount++;
+            //}
+
+            if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
             {
-                throw new Exception("找不到下一步");
+                //if (maxUCT.IsEnd)
+                //{
+                //    return;
+                //}
+
+                //maxUCT.IsEnd = true;
+
+                MonteCarloTree.AllCount++;
+                //maxUCT.ParentTree.ParentTree.IsEnd = true;
+                BackLoad(maxUCT, isBlack);
+                return;
             }
+
+            map[maxUCT.Y, maxUCT.X] = isBlack ? 1 : 2;
+            Run(map, !isBlack, maxUCT);
+            map[maxUCT.Y, maxUCT.X] = 0;
         }
 
         private void BackLoad(MonteCarloTree tree, bool isBlack)
