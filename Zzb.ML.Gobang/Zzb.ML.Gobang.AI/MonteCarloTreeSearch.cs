@@ -22,61 +22,62 @@ namespace Zzb.ML.Gobang.AI
                 _currentTree = _tree;
             }
 
-            DateTime dt = DateTime.Now;
+            var list = GetEmptyPoints(map);
 
-
-            while (dt.AddSeconds(1) > DateTime.Now)
+            foreach (var point in list)
             {
-                Run(map, isBlack, _currentTree);
+                if (!(from t in _currentTree.Trees where t.X == point.X && t.Y == point.Y select t).Any())
+                {
+                    var one = new MonteCarloTree { ParentTree = _currentTree, X = point.X, Y = point.Y, IsBlack = isBlack };
+                    _currentTree.Trees.Add(one);
+                    _treeCount++;
+                    QuickRun(map, isBlack, one);
+                }
             }
 
-            //var tree = _currentTree.Trees.FirstOrDefault(t => t.IsEnd && t.Win == t.Count);
+            var tree = _currentTree.Trees.OrderByDescending(t => t.UCT).First();
 
-            //if (tree != null)
-            //{
-            //    _currentTree = tree;
-            //    return new Point(tree.X, tree.Y);
-            //}
+            var temps = (from t in _currentTree.Trees where t.UCT == tree.UCT select t).ToList();
 
-            var tree = _currentTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
+            tree = temps[new Random().Next(temps.Count())];
 
-            if (tree != null)
+            if (GameWin.IsGameEnd(new Point(tree.X, tree.Y), isBlack ? 1 : 2, map))
             {
-                _currentTree = tree;
+                _currentTree = null;
+                MonteCarloTree.AllCount++;
+                BackLoad(tree, isBlack);
                 return new Point(tree.X, tree.Y);
             }
 
-            return new Point();
+            _currentTree = tree;
+            return new Point(tree.X, tree.Y);
+        }
+
+        private void QuickRun(int[,] map, bool isBlack, MonteCarloTree tempTree)
+        {
+            var list = GetEmptyPoints(map);
+            var temp = list[new Random().Next(list.Count())];
+            var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack };
+            _treeCount++;
+            tempTree.Trees.Add(one);
+            if (GameWin.IsGameEnd(new Point(temp.X, temp.Y), isBlack ? 1 : 2, map))
+            {
+                MonteCarloTree.AllCount++;
+                BackLoad(one, isBlack);
+                return;
+            }
+
+            map[one.Y, one.X] = isBlack ? 1 : 2;
+            QuickRun(map, !isBlack, one);
+            map[one.Y, one.X] = 0;
         }
 
         private void Run(int[,] map, bool isBlack, MonteCarloTree tempTree = null)
         {
             tempTree ??= _tree;
 
-            //lock (_tree)
-            //{
-            //    var list = GetEmptyPoints(map);
-
-            //    if (!tempTree.Trees.Any())
-            //    {
-            //        foreach (var point in list)
-            //        {
-            //            var one = new MonteCarloTree { ParentTree = tempTree, X = point.X, Y = point.Y, IsBlack = isBlack };
-            //            tempTree.Trees.Add(one);
-            //            _treeCount++;
-            //            //_list.Add(one);
-            //        }
-            //    }
-            //}
-
             var maxUCT = tempTree.Trees.OrderByDescending(t => t.UCT).FirstOrDefault();
 
-            //if (maxUCT.UCT == 0.5)
-            //{
-            //    var temps = tempTree.Trees.Where(t => t.UCT == maxUCT.UCT);
-
-            //    maxUCT = temps.ToArray()[new Random().Next(temps.Count())];
-            //}
             if (maxUCT == null || maxUCT.UCT < 0.5)
             {
                 var list = GetEmptyPoints(map);
@@ -94,37 +95,10 @@ namespace Zzb.ML.Gobang.AI
                 _treeCount++;
 
             }
-            //if (maxUCT != null && maxUCT.UCT < 0.5)
-            //{
-            //    var temp = maxUCT.ListPoints[new Random().Next(maxUCT.ListPoints.Count())];
-            //    maxUCT.ListPoints.Remove(temp);
-            //    var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ListPoints = list };
-            //    tempTree.Trees.Add(one);
-            //}
-
-            //if (maxUCT == null)
-            //{
-            //    var list = GetEmptyPoints(map);
-
-            //    var temp = list[new Random().Next(list.Count())];
-            //    list.Remove(temp);
-            //    var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ListPoints = list };
-            //    tempTree.Trees.Add(one);
-            //    maxUCT = one;
-            //    _treeCount++;
-            //}
 
             if (GameWin.IsGameEnd(new Point(maxUCT.X, maxUCT.Y), isBlack ? 1 : 2, map))
             {
-                //if (maxUCT.IsEnd)
-                //{
-                //    return;
-                //}
-
-                //maxUCT.IsEnd = true;
-
                 MonteCarloTree.AllCount++;
-                //maxUCT.ParentTree.ParentTree.IsEnd = true;
                 BackLoad(maxUCT, isBlack);
                 return;
             }
@@ -138,13 +112,6 @@ namespace Zzb.ML.Gobang.AI
         {
             if (tree != null)
             {
-                //if (tree.IsEnd && tree.ParentTree?.ParentTree != null)
-                //{
-                //    if (tree.ParentTree.Trees.All(t => t.IsEnd))
-                //    {
-                //        tree.ParentTree.ParentTree.IsEnd = true;
-                //    }
-                //}
                 tree.Count++;
                 if (tree.IsBlack == isBlack)
                 {
