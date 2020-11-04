@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Zzb.ML.Gobang.AI;
 
 namespace Zzb.ML.Gobang
 {
@@ -60,7 +61,9 @@ namespace Zzb.ML.Gobang
 
         private void AutoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-       
+            frmText frm = new frmText();
+            MonteCarloTreeSearch.Log = frm.Log;
+            frm.Show();
             board.AutoGame();
         }
     }

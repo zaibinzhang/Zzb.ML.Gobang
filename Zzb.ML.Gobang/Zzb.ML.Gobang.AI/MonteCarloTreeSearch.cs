@@ -10,6 +10,8 @@ namespace Zzb.ML.Gobang.AI
     {
         private MonteCarloTreeService _service = new MonteCarloTreeService();
 
+        public static Action<string> Log { get; set; }
+
         private static Guid _currentId = Guid.Empty;
 
         public Point CalNext(int[,] map, bool isBlack)
@@ -61,6 +63,7 @@ namespace Zzb.ML.Gobang.AI
                 return new Point(tree.X, tree.Y);
             }
 
+            Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】,{DateTime.Now}");
             _currentId = tree.MonteCarloTreeId;
             return new Point(tree.X, tree.Y);
         }
