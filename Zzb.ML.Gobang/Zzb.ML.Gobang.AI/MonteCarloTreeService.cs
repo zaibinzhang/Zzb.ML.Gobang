@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Zzb.ML.EF;
 
@@ -6,38 +7,40 @@ namespace Zzb.ML.Gobang.AI
 {
     public class MonteCarloTreeService
     {
+        private static readonly ZzbContext Context = new ZzbContext();
         public MonteCarloTree GetBaseTree()
         {
-            using var context = new ZzbContext();
-            var tree = (from t in context.MonteCarloTrees where t.ParentTreeId == null select t).FirstOrDefault();
+            var tree = (from t in Context.MonteCarloTrees where t.ParentTreeId == null select t).FirstOrDefault();
             if (tree != null)
             {
                 return tree;
             }
 
-            var one = context.MonteCarloTrees.Add(new MonteCarloTree() { IsBlack = false });
-            context.SaveChanges();
+            var one = Context.MonteCarloTrees.Add(new MonteCarloTree() { IsBlack = false });
+            Context.SaveChanges();
             return one.Entity;
         }
 
         public MonteCarloTree GeTree(Guid id)
         {
-            using var context = new ZzbContext();
-            return (from t in context.MonteCarloTrees where t.MonteCarloTreeId == id select t).First();
+            return (from t in Context.MonteCarloTrees where t.MonteCarloTreeId == id select t).First();
         }
 
         public void Add(MonteCarloTree one)
         {
-            using var context = new ZzbContext();
-            context.MonteCarloTrees.Add(one);
-            context.SaveChanges();
+            Context.MonteCarloTrees.Add(one);
+            Context.SaveChanges();
         }
 
         public MonteCarloTree GetMaxUCTTree(Guid id)
         {
-            using var context = new ZzbContext();
-            return (from t in context.MonteCarloTrees where t.ParentTreeId == id orderby t.UCT descending select t)
+            return (from t in Context.MonteCarloTrees where t.ParentTreeId == id orderby t.UCT descending select t)
                 .First();
+        }
+
+        public List<MonteCarloTree> GetTrees(Guid id)
+        {
+            return (from t in Context.MonteCarloTrees where t.ParentTreeId == id select t).ToList();
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Zzb.ML.EF
 
         public void UpdateUCT()
         {
-            UCT = (double)this.Win / this.Count + Math.Sqrt(Math.Log10(AllCount) / Count);
+            UCT = (double) this.Win / this.Count + Math.Sqrt(Math.Log10(AllCount) / Count);
         }
     }
 }

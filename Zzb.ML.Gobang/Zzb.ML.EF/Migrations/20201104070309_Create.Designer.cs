@@ -10,7 +10,7 @@ using Zzb.ML.EF;
 namespace Zzb.ML.EF.Migrations
 {
     [DbContext(typeof(ZzbContext))]
-    [Migration("20201104044133_Create")]
+    [Migration("20201104070309_Create")]
     partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
