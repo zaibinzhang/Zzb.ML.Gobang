@@ -34,9 +34,6 @@ namespace Zzb.ML.EF.Migrations
                     b.Property<Guid?>("ParentTreeId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("UCT")
-                        .HasColumnType("float");
-
                     b.Property<long>("Win")
                         .HasColumnType("bigint");
 

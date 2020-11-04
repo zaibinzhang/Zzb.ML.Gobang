@@ -14,6 +14,18 @@ namespace Zzb.ML.Gobang.AI
 
         public Point CalNext(int[,] map, bool isBlack)
         {
+            //List<MonteCarloTree> list1 = new List<MonteCarloTree>();
+            //for (int i = 0; i < 100000; i++)
+            //{
+            //    list1.Add(new MonteCarloTree());
+            //}
+
+            //using (var context=new ZzbContext())
+            //{
+            //    context.MonteCarloTrees.AddRange(list1);
+            //    context.SaveChanges();
+            //}
+
             if (_currentId == Guid.Empty)
             {
                 var baseTree = _service.GetBaseTree();
@@ -32,12 +44,14 @@ namespace Zzb.ML.Gobang.AI
                 if (!(from t in trees where t.X == point.X && t.Y == point.Y select t).Any())
                 {
                     var one = new MonteCarloTree() { ParentTreeId = _currentId, ParentTree = currentTree, X = point.X, Y = point.Y, IsBlack = isBlack };
-                    QuickRun(map, isBlack, one);
+                    QuickRun(map, !isBlack, one);
                     _service.Add(one);
                 }
             }
 
-            var tree = _service.GetMaxUCTTree(_currentId);
+            trees = _service.GetTrees(_currentId);
+
+            var tree = (from t in trees orderby t.UCT descending select t).First();
 
             if (GameWin.IsGameEnd(new Point(tree.X, tree.Y), isBlack ? 1 : 2, map))
             {
@@ -55,7 +69,7 @@ namespace Zzb.ML.Gobang.AI
         {
             var list = GetEmptyPoints(map);
             var temp = list[new Random().Next(list.Count())];
-            var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack };
+            var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ParentTreeId = tempTree.MonteCarloTreeId };
             tempTree.MonteCarloTrees.Add(one);
             if (GameWin.IsGameEnd(new Point(temp.X, temp.Y), isBlack ? 1 : 2, map))
             {
@@ -78,11 +92,10 @@ namespace Zzb.ML.Gobang.AI
                 {
                     tree.Win++;
                 }
-                tree.UpdateUCT();
                 BackLoad(tree.ParentTree, isBlack);
             }
         }
-    
+
         private List<Point> GetEmptyPoints(int[,] map)
         {
             List<Point> list = new List<Point>();

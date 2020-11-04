@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Zzb.ML.EF;
 
 namespace Zzb.ML.Gobang.AI
@@ -28,16 +30,24 @@ namespace Zzb.ML.Gobang.AI
 
         public void Add(MonteCarloTree one)
         {
-            Context.MonteCarloTrees.Add(one);
+            StringBuilder sb = new StringBuilder();
+            var temp = one;
+            while (temp != null)
+            {
+                sb.Append($"insert into MonteCarloTrees values('{temp.MonteCarloTreeId}','{temp.ParentTreeId.Value}',{temp.X},{temp.Y},{temp.Count},{temp.Win},{(temp.IsBlack ? 1 : 0)});");
+                if (temp.MonteCarloTrees.Any())
+                {
+                    temp = temp.MonteCarloTrees[0];
+                }
+                else
+                {
+                    temp = null;
+                }
+            }
+
+            Context.Database.ExecuteSqlCommand(sb.ToString());
             Context.SaveChanges();
         }
-
-        public MonteCarloTree GetMaxUCTTree(Guid id)
-        {
-            return (from t in Context.MonteCarloTrees where t.ParentTreeId == id orderby t.UCT descending select t)
-                .First();
-        }
-
         public List<MonteCarloTree> GetTrees(Guid id)
         {
             return (from t in Context.MonteCarloTrees where t.ParentTreeId == id select t).ToList();

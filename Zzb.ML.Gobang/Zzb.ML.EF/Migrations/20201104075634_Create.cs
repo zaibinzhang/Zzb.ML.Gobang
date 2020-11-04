@@ -17,7 +17,6 @@ namespace Zzb.ML.EF.Migrations
                     Y = table.Column<int>(nullable: false),
                     Count = table.Column<long>(nullable: false),
                     Win = table.Column<long>(nullable: false),
-                    UCT = table.Column<double>(nullable: false),
                     IsBlack = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>

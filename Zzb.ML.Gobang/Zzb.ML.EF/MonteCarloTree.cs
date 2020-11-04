@@ -8,7 +8,7 @@ namespace Zzb.ML.EF
     {
         public static long AllCount { get; set; }
 
-        public Guid MonteCarloTreeId { get; set; }
+        public Guid MonteCarloTreeId { get; set; } = Guid.NewGuid();
 
         public Guid? ParentTreeId { get; set; }
 
@@ -26,13 +26,8 @@ namespace Zzb.ML.EF
 
         public long Win { get; set; }
 
-        public double UCT { get; set; }
+        public double UCT => (double)this.Win / this.Count + Math.Sqrt(Math.Log10(AllCount) / Count);
 
         public bool IsBlack { get; set; }
-
-        public void UpdateUCT()
-        {
-            UCT = (double) this.Win / this.Count + Math.Sqrt(Math.Log10(AllCount) / Count);
-        }
     }
 }

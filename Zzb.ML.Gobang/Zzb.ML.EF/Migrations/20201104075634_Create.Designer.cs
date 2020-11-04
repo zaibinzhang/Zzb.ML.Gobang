@@ -10,7 +10,7 @@ using Zzb.ML.EF;
 namespace Zzb.ML.EF.Migrations
 {
     [DbContext(typeof(ZzbContext))]
-    [Migration("20201104070309_Create")]
+    [Migration("20201104075634_Create")]
     partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,9 +35,6 @@ namespace Zzb.ML.EF.Migrations
 
                     b.Property<Guid?>("ParentTreeId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("UCT")
-                        .HasColumnType("float");
 
                     b.Property<long>("Win")
                         .HasColumnType("bigint");
