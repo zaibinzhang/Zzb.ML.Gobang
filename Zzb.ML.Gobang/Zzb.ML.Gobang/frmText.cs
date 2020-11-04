@@ -12,7 +12,14 @@ namespace Zzb.ML.Gobang
     {
         public void Log(string text)
         {
-            Invoke(new EventHandler(delegate { textBox1.Text += text + "\r\n"; }));
+            Invoke(new EventHandler(delegate
+            {
+                textBox1.Text = text + "\r\n" + textBox1.Text;
+                if (textBox1.Text.Length > 10000)
+                {
+                    textBox1.Text = textBox1.Text.Substring(0, 5000);
+                }
+            }));
         }
 
         public frmText()
