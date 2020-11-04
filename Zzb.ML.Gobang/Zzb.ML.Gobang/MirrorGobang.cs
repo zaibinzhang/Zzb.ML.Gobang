@@ -65,20 +65,5 @@ namespace Zzb.ML.Gobang
             gobang.SetPoint(temp);
             _gobangs.Add(gobang);
         }
-
-        public void WinAndSave(bool isBlack)
-        {
-            new Task(() =>
-            {
-                foreach (EF.Gobang gobang in _gobangs.Where(t => t.IsBlack == isBlack))
-                {
-                    gobang.IsWin = true;
-                }
-                using ZzbContext tempContext = ZzbContext.CreateContext();
-                tempContext.Gobangs.AddRange(_gobangs);
-                tempContext.SaveChanges();
-                ModelBuilder.IsUpdate = true;
-            }).Start();
-        }
     }
 }

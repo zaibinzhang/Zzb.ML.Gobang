@@ -16,8 +16,8 @@ namespace Zzb.ML.Gobang
         [STAThread]
         static void Main()
         {
-            //using var context = ZzbContext.CreateContext();
-            //context.Database.Migrate();
+            using var context = ZzbContext.CreateContext();
+            context.Database.Migrate();
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

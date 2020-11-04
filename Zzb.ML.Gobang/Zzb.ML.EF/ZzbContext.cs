@@ -17,7 +17,7 @@ namespace Zzb.ML.EF
             options.UseLazyLoadingProxies().UseSqlServer(connect);
         }
 
-        public DbSet<Gobang> Gobangs { get; set; }
+        public DbSet<MonteCarloTree> MonteCarloTrees { get; set; }
 
 
         public static ZzbContext CreateContext()

@@ -586,10 +586,6 @@ namespace Zzb.ML.Gobang
                 {
                     gobang.IsWin = true;
                 }
-
-                using var context = ZzbContext.CreateContext();
-                context.Gobangs.AddRange(gobangs);
-                context.SaveChanges();
                 OnGameEnd(this, new GameEndEventArgs(color));
             }
 
