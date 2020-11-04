@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Zzb.ML.EF
 {
@@ -15,9 +16,11 @@ namespace Zzb.ML.EF
                 connect = File.ReadAllText(connectFile);
             }
             options.UseLazyLoadingProxies().UseSqlServer(connect);
+            //options.ConfigureWarnings(warnnings => warnnings.Log(CoreEventId.DetachedLazyLoadingWarning));
         }
 
         public DbSet<MonteCarloTree> MonteCarloTrees { get; set; }
+
 
 
         public static ZzbContext CreateContext()

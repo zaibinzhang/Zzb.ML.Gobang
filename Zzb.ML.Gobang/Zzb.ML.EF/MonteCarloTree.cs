@@ -16,7 +16,7 @@ namespace Zzb.ML.EF
         public virtual MonteCarloTree ParentTree { get; set; }
 
         [InverseProperty("ParentTree")]
-        public virtual List<MonteCarloTree> MonteCarloTrees { get; set; }
+        public virtual List<MonteCarloTree> MonteCarloTrees { get; set; } = new List<MonteCarloTree>();
 
         public int X { get; set; }
 
