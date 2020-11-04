@@ -6,6 +6,8 @@ namespace Zzb.ML.EF
 {
     public class MonteCarloTree
     {
+        public static long AllCount { get; set; }
+
         public Guid MonteCarloTreeId { get; set; }
 
         public Guid? ParentTreeId { get; set; }
@@ -27,5 +29,10 @@ namespace Zzb.ML.EF
         public double UCT { get; set; }
 
         public bool IsBlack { get; set; }
+
+        public void UpdateUCT()
+        {
+            UCT = (double)this.Win / this.Count + Math.Sqrt(Math.Log10(AllCount) / Count);
+        }
     }
 }
