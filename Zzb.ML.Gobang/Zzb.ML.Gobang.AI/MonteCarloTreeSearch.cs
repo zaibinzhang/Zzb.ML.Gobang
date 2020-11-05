@@ -12,59 +12,61 @@ namespace Zzb.ML.Gobang.AI
 
         public static Action<string> Log { get; set; }
 
-        private static Guid _currentId = Guid.Empty;
+        private static MonteCarloTree _currentTree;
+
+        private static Dictionary<Guid, MonteCarloTree> _addList = new Dictionary<Guid, MonteCarloTree>();
+
+        private static List<MonteCarloTree> _updateList = new List<MonteCarloTree>();
+
+        private static ZzbContext context = new ZzbContext();
 
         public Point CalNext(int[,] map, bool isBlack)
         {
-            //List<MonteCarloTree> list1 = new List<MonteCarloTree>();
-            //for (int i = 0; i < 100000; i++)
-            //{
-            //    list1.Add(new MonteCarloTree());
-            //}
-
-            //using (var context=new ZzbContext())
-            //{
-            //    context.MonteCarloTrees.AddRange(list1);
-            //    context.SaveChanges();
-            //}
-
-            if (_currentId == Guid.Empty)
+            if (_currentTree == null)
             {
-                var baseTree = _service.GetBaseTree();
-                _currentId = baseTree.MonteCarloTreeId;
-                MonteCarloTree.AllCount = baseTree.Count;
+                _currentTree = _service.GetBaseTree(context);
+                MonteCarloTree.AllCount = _currentTree.Count;
+            }
+
+            if (!_addList.ContainsKey(_currentTree.MonteCarloTreeId))
+            {
+                _updateList.Add(_currentTree);
             }
 
             var list = GetEmptyPoints(map);
 
-            var currentTree = _service.GeTree(_currentId);
-
-            var trees = _service.GetTrees(_currentId);
-
             foreach (var point in list)
             {
-                if (!(from t in trees where t.X == point.X && t.Y == point.Y select t).Any())
+                if (!(from t in _currentTree.MonteCarloTrees where t.X == point.X && t.Y == point.Y select t).Any())
                 {
-                    var one = new MonteCarloTree() { ParentTreeId = _currentId, ParentTree = currentTree, X = point.X, Y = point.Y, IsBlack = isBlack };
+                    var one = new MonteCarloTree() { ParentTreeId = _currentTree.MonteCarloTreeId, ParentTree = _currentTree, X = point.X, Y = point.Y, IsBlack = isBlack };
                     QuickRun(map, !isBlack, one);
-                    _service.Add(one);
+                    _currentTree.MonteCarloTrees.Add(one);
+                    _addList.Add(one.MonteCarloTreeId, one);
                 }
             }
 
-            trees = _service.GetTrees(_currentId);
-
-            var tree = (from t in trees orderby t.UCT descending select t).First();
+            //var trees = (from t in _currentTree.MonteCarloTrees orderby t.UCT descending select t).ToList();
+            //var tree = trees.OrderByDescending(t => t.MonteCarloTreeId).First();
+            var trees = _currentTree.MonteCarloTrees.GroupBy(t => t.UCT).OrderByDescending(t => t.Key).First();
+            var tree = (from t in trees orderby t.MonteCarloTreeId select t).First();
 
             if (GameWin.IsGameEnd(new Point(tree.X, tree.Y), isBlack ? 1 : 2, map))
             {
-                _currentId = Guid.Empty;
                 MonteCarloTree.AllCount++;
                 BackLoad(tree, isBlack);
+                _service.Save(_addList.Values.ToList(), _updateList);
+                _currentTree = null;
+                _addList = new Dictionary<Guid, MonteCarloTree>();
+                _updateList = new List<MonteCarloTree>();
+                context.Dispose();
+                context = new ZzbContext();
                 return new Point(tree.X, tree.Y);
             }
 
             Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】,{DateTime.Now}");
-            _currentId = tree.MonteCarloTreeId;
+            _currentTree = tree;
+
             return new Point(tree.X, tree.Y);
         }
 

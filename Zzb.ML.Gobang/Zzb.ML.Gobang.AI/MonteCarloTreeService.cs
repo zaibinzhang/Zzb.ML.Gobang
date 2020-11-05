@@ -9,48 +9,35 @@ namespace Zzb.ML.Gobang.AI
 {
     public class MonteCarloTreeService
     {
-        private static readonly ZzbContext Context = new ZzbContext();
-        public MonteCarloTree GetBaseTree()
+        public MonteCarloTree GetBaseTree(ZzbContext context)
         {
-            var tree = (from t in Context.MonteCarloTrees where t.ParentTreeId == null select t).FirstOrDefault();
+         
+            var tree = (from t in context.MonteCarloTrees where t.ParentTreeId == null select t).FirstOrDefault();
             if (tree != null)
             {
                 return tree;
             }
 
-            var one = Context.MonteCarloTrees.Add(new MonteCarloTree() { IsBlack = false });
-            Context.SaveChanges();
+            var one = context.MonteCarloTrees.Add(new MonteCarloTree() { IsBlack = false });
+            context.SaveChanges();
             return one.Entity;
         }
 
-        public MonteCarloTree GeTree(Guid id)
-        {
-            return (from t in Context.MonteCarloTrees where t.MonteCarloTreeId == id select t).First();
-        }
-
-        public void Add(MonteCarloTree one)
+        public void Save(List<MonteCarloTree> addList, List<MonteCarloTree> updateList)
         {
             StringBuilder sb = new StringBuilder();
-            var temp = one;
-            while (temp != null)
+            foreach (var temp in addList)
             {
                 sb.Append($"insert into MonteCarloTrees values('{temp.MonteCarloTreeId}','{temp.ParentTreeId.Value}',{temp.X},{temp.Y},{temp.Count},{temp.Win},{(temp.IsBlack ? 1 : 0)});");
-                if (temp.MonteCarloTrees.Any())
-                {
-                    temp = temp.MonteCarloTrees[0];
-                }
-                else
-                {
-                    temp = null;
-                }
             }
 
-            Context.Database.ExecuteSqlCommand(sb.ToString());
-            Context.SaveChanges();
-        }
-        public List<MonteCarloTree> GetTrees(Guid id)
-        {
-            return (from t in Context.MonteCarloTrees where t.ParentTreeId == id select t).ToList();
+            foreach (MonteCarloTree tree in updateList)
+            {
+                sb.Append(
+                    $"update MonteCarloTrees set Count={tree.Count},Win={tree.Win} where MonteCarloTreeId='{tree.MonteCarloTreeId}'");
+            }
+            using var context = new ZzbContext();
+            context.Database.ExecuteSqlRaw(sb.ToString());
         }
     }
 }
