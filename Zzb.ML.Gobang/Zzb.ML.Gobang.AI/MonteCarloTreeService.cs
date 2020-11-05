@@ -9,37 +9,38 @@ namespace Zzb.ML.Gobang.AI
 {
     public class MonteCarloTreeService
     {
-        public MonteCarloTree GetBaseTree(ZzbContext context)
-        {
+        private static ZzbContext _context = new ZzbContext();
 
-            var tree = (from t in context.MonteCarloTrees where t.ParentTreeId == null select t).FirstOrDefault();
+        public void Clear()
+        {
+            _context.Dispose();
+            _context = new ZzbContext();
+        }
+
+        public MonteCarloTree GetBaseTree()
+        {
+            var tree = (from t in _context.MonteCarloTrees where t.ParentTreeId == null select t).FirstOrDefault();
             if (tree != null)
             {
                 return tree;
             }
 
-            var one = context.MonteCarloTrees.Add(new MonteCarloTree() { IsBlack = false });
-            context.SaveChanges();
+            var one = _context.MonteCarloTrees.Add(new MonteCarloTree() { IsBlack = false });
+            _context.SaveChanges();
             return one.Entity;
+        }
+
+        public List<MonteCarloTree> GetTrees(Guid id)
+        {
+            return (from t in _context.MonteCarloTrees where t.ParentTreeId == id select t).ToList();
         }
 
         public void Save(List<MonteCarloTree> addList, List<MonteCarloTree> updateList)
         {
-            using var context = new ZzbContext();
-            using var tran = context.Database.BeginTransaction();
-            long time = 0;
             StringBuilder sb = new StringBuilder();
             foreach (var temp in addList)
             {
                 sb.Append($"insert into MonteCarloTrees values('{temp.MonteCarloTreeId}','{temp.ParentTreeId.Value}',{temp.X},{temp.Y},{temp.Count},{temp.Win},{(temp.IsBlack ? 1 : 0)});");
-                time++;
-                
-                if (time > 100000)
-                {
-                    context.Database.ExecuteSqlRaw(sb.ToString());
-                    sb = new StringBuilder();
-                    time = 0;
-                }
             }
 
             foreach (MonteCarloTree tree in updateList)
@@ -47,8 +48,7 @@ namespace Zzb.ML.Gobang.AI
                 sb.Append(
                     $"update MonteCarloTrees set Count={tree.Count},Win={tree.Win} where MonteCarloTreeId='{tree.MonteCarloTreeId}'");
             }
-            context.Database.ExecuteSqlRaw(sb.ToString());
-            tran.Commit();
+            _context.Database.ExecuteSqlRaw(sb.ToString());
         }
     }
 }
