@@ -56,6 +56,7 @@ namespace Zzb.ML.Gobang.AI
                 MonteCarloTree.AllCount++;
                 BackLoad(tree, isBlack);
                 _service.Save(_addList.Values.ToList(), _updateList);
+                Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】后胜利，新增了[{_addList.Count}]条数据，更新了[{_updateList.Count}]条数据,{DateTime.Now}");
                 _currentTree = null;
                 _addList = new Dictionary<Guid, MonteCarloTree>();
                 _updateList = new List<MonteCarloTree>();
