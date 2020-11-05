@@ -55,7 +55,7 @@ namespace Zzb.ML.Gobang.AI
             {
                 MonteCarloTree.AllCount++;
                 BackLoad(tree, isBlack);
-1                Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】后胜利，新增了[{_addList.Count}]条数据，更新了[{_updateList.Count}]条数据,{DateTime.Now}");
+                Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】后胜利，新增了[{_addList.Count}]条数据，更新了[{_updateList.Count}]条数据,{DateTime.Now}");
                 _service.Save(_addList.Values.ToList(), _updateList);
                 _currentTree = null;
                 _addList = new Dictionary<Guid, MonteCarloTree>();
@@ -77,6 +77,7 @@ namespace Zzb.ML.Gobang.AI
             var temp = list[new Random().Next(list.Count())];
             var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ParentTreeId = tempTree.MonteCarloTreeId };
             tempTree.MonteCarloTrees.Add(one);
+            _addList.Add(one.MonteCarloTreeId, one);
             if (GameWin.IsGameEnd(new Point(temp.X, temp.Y), isBlack ? 1 : 2, map))
             {
                 MonteCarloTree.AllCount++;
