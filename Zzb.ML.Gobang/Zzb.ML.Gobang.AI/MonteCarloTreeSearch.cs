@@ -103,7 +103,7 @@ namespace Zzb.ML.Gobang.AI
                 {
                     _updateList.Add(tree);
                 }
-                BackLoad(tree.ParentTree, isBlack);
+                BackLoad(tree.ParentTree, isBlack, isUpdate);
             }
         }
 
