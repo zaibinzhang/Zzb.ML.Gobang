@@ -14,9 +14,11 @@ namespace Zzb.ML.Gobang.AI
 
         private static MonteCarloTree _currentTree;
 
-        private static Dictionary<Guid, MonteCarloTree> _addList = new Dictionary<Guid, MonteCarloTree>();
+        private static Dictionary<long, MonteCarloTree> _addList = new Dictionary<long, MonteCarloTree>();
 
         private static List<MonteCarloTree> _updateList = new List<MonteCarloTree>();
+
+        private static long _maxId = -1;
 
         public Point CalNext(int[,] map, bool isBlack)
         {
@@ -24,6 +26,11 @@ namespace Zzb.ML.Gobang.AI
             {
                 _currentTree = _service.GetBaseTree();
                 MonteCarloTree.AllCount = _currentTree.Count;
+            }
+
+            if (_maxId < 0)
+            {
+                _maxId = _service.GetMaxId() + 1;
             }
 
             var list = GetEmptyPoints(map);
@@ -34,7 +41,7 @@ namespace Zzb.ML.Gobang.AI
             {
                 if (!(from t in currentTrees where t.X == point.X && t.Y == point.Y select t).Any())
                 {
-                    var one = new MonteCarloTree() { ParentTreeId = _currentTree.MonteCarloTreeId, ParentTree = _currentTree, X = point.X, Y = point.Y, IsBlack = isBlack };
+                    var one = new MonteCarloTree() { MonteCarloTreeId = _maxId++, ParentTreeId = _currentTree.MonteCarloTreeId, ParentTree = _currentTree, X = point.X, Y = point.Y, IsBlack = isBlack };
                     _addList.Add(one.MonteCarloTreeId, one);
                     QuickRun(map, !isBlack, one);
                     var temp = _currentTree;
@@ -44,13 +51,13 @@ namespace Zzb.ML.Gobang.AI
                         temp = temp.ParentTree;
                     }
                     _service.Save(_addList.Values.ToList(), _updateList);
-                    _addList = new Dictionary<Guid, MonteCarloTree>();
+                    _addList = new Dictionary<long, MonteCarloTree>();
                     _updateList = new List<MonteCarloTree>();
                 }
             }
 
             var trees = _service.GetTrees(_currentTree.MonteCarloTreeId).GroupBy(t => t.UCT).OrderByDescending(t => t.Key).First();
-            var tree = (from t in trees orderby t.MonteCarloTreeId select t).First();
+            var tree = (from t in trees orderby t.RandomNumber select t).First();
 
             if (GameWin.IsGameEnd(new Point(tree.X, tree.Y), isBlack ? 1 : 2, map))
             {
@@ -74,7 +81,7 @@ namespace Zzb.ML.Gobang.AI
         {
             var list = GetEmptyPoints(map);
             var temp = list[new Random().Next(list.Count())];
-            var one = new MonteCarloTree { ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ParentTreeId = tempTree.MonteCarloTreeId };
+            var one = new MonteCarloTree { MonteCarloTreeId = _maxId++, ParentTree = tempTree, X = temp.X, Y = temp.Y, IsBlack = isBlack, ParentTreeId = tempTree.MonteCarloTreeId };
             tempTree.MonteCarloTrees.Add(one);
             _addList.Add(one.MonteCarloTreeId, one);
             if (GameWin.IsGameEnd(new Point(temp.X, temp.Y), isBlack ? 1 : 2, map))

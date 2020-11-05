@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Zzb.ML.EF.Migrations
 {
@@ -11,8 +10,8 @@ namespace Zzb.ML.EF.Migrations
                 name: "MonteCarloTrees",
                 columns: table => new
                 {
-                    MonteCarloTreeId = table.Column<Guid>(nullable: false),
-                    ParentTreeId = table.Column<Guid>(nullable: true),
+                    MonteCarloTreeId = table.Column<long>(nullable: false),
+                    ParentTreeId = table.Column<long>(nullable: true),
                     X = table.Column<int>(nullable: false),
                     Y = table.Column<int>(nullable: false),
                     Count = table.Column<long>(nullable: false),

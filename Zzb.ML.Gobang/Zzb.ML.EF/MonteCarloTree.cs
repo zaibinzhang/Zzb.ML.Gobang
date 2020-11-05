@@ -6,11 +6,13 @@ namespace Zzb.ML.EF
 {
     public class MonteCarloTree
     {
+        private static Random _random = new Random();
         public static long AllCount { get; set; }
 
-        public Guid MonteCarloTreeId { get; set; } = Guid.NewGuid();
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long MonteCarloTreeId { get; set; }
 
-        public Guid? ParentTreeId { get; set; }
+        public long? ParentTreeId { get; set; }
 
         [ForeignKey("ParentTreeId")]
         public virtual MonteCarloTree ParentTree { get; set; }
@@ -29,5 +31,7 @@ namespace Zzb.ML.EF
         public double UCT => (double)this.Win / this.Count + Math.Sqrt(Math.Log10(AllCount) / Count);
 
         public bool IsBlack { get; set; }
+
+        public double RandomNumber => _random.NextDouble();
     }
 }

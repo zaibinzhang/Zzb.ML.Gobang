@@ -21,9 +21,8 @@ namespace Zzb.ML.EF.Migrations
 
             modelBuilder.Entity("Zzb.ML.EF.MonteCarloTree", b =>
                 {
-                    b.Property<Guid>("MonteCarloTreeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("MonteCarloTreeId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Count")
                         .HasColumnType("bigint");
@@ -31,8 +30,8 @@ namespace Zzb.ML.EF.Migrations
                     b.Property<bool>("IsBlack")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("ParentTreeId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long?>("ParentTreeId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Win")
                         .HasColumnType("bigint");

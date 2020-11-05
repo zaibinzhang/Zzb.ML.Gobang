@@ -17,6 +17,12 @@ namespace Zzb.ML.Gobang.AI
             _context = new ZzbContext();
         }
 
+        public long GetMaxId()
+        {
+            return (from t in _context.MonteCarloTrees orderby t.MonteCarloTreeId descending select t).First()
+                .MonteCarloTreeId;
+        }
+
         public MonteCarloTree GetBaseTree()
         {
             var tree = (from t in _context.MonteCarloTrees where t.ParentTreeId == null select t).FirstOrDefault();
@@ -30,7 +36,7 @@ namespace Zzb.ML.Gobang.AI
             return one.Entity;
         }
 
-        public List<MonteCarloTree> GetTrees(Guid id)
+        public List<MonteCarloTree> GetTrees(long id)
         {
             return (from t in _context.MonteCarloTrees where t.ParentTreeId == id select t).ToList();
         }
