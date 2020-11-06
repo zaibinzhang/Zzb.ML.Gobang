@@ -54,7 +54,7 @@ namespace Zzb.ML.Gobang.AI
                     }
                     _service.Save(_addList.Values.ToList(), _updateList);
                     addCount += _addList.Count;
-                    updateCount += _updateList.Count;
+                    updateCount = _updateList.Count;
                     _addList = new Dictionary<long, MonteCarloTree>();
                     _updateList = new List<MonteCarloTree>();
                 }
