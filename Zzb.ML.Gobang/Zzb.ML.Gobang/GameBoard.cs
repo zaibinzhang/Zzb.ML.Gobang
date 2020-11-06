@@ -26,7 +26,7 @@ namespace Zzb.ML.Gobang
         private static Bitmap blackChessImg = Resource.black;
         private static Bitmap whiteChessImg = Resource.white;
         //size*size个点的游戏，横向size个点，纵向size个点
-        private const int gameSize = 15;
+        private const int gameSize = 8;
         //一个格子的尺寸
         private const int blockSize = 30;
         //棋子图片尺寸
@@ -393,6 +393,7 @@ namespace Zzb.ML.Gobang
 
         public void AutoGame()
         {
+            MonteCarloTreeSearch.ReStart = ReStartGame;
             new Task(() =>
             {
                 while (true)

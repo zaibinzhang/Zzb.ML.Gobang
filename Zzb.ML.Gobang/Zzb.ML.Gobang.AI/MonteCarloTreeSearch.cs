@@ -10,6 +10,7 @@ namespace Zzb.ML.Gobang.AI
     {
         private MonteCarloTreeService _service = new MonteCarloTreeService();
 
+        public static Action ReStart { get; set; }
         public static Action<string> Log { get; set; }
 
         private static MonteCarloTree _currentTree;
@@ -34,6 +35,8 @@ namespace Zzb.ML.Gobang.AI
             }
 
             var list = GetEmptyPoints(map);
+
+
 
             var currentTrees = _service.GetTrees(_currentTree.MonteCarloTreeId);
 
@@ -75,6 +78,19 @@ namespace Zzb.ML.Gobang.AI
                 return new Point(tree.X, tree.Y);
             }
 
+            if (list.Count == 1)
+            {
+                MonteCarloTree.AllCount++;
+                BackLoad(tree, isBlack, true, true);
+                _service.Save(_addList.Values.ToList(), _updateList);
+                _currentTree = null;
+                _updateList = new List<MonteCarloTree>();
+                _service.Clear();
+                Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】后和棋,{DateTime.Now}");
+                ReStart();
+                return new Point(tree.X, tree.Y);
+            }
+
             Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】,新增了[{addCount}]条数据,更新了[{updateCount}]条数据,{DateTime.Now}");
             _currentTree = tree;
 
@@ -95,17 +111,23 @@ namespace Zzb.ML.Gobang.AI
                 return;
             }
 
+            if (list.Count == 1)
+            {
+                MonteCarloTree.AllCount++;
+                BackLoad(one, isBlack, false, true);
+                return;
+            }
             map[one.Y, one.X] = isBlack ? 1 : 2;
             QuickRun(map, !isBlack, one);
             map[one.Y, one.X] = 0;
         }
 
-        private void BackLoad(MonteCarloTree tree, bool isBlack, bool isUpdate = false)
+        private void BackLoad(MonteCarloTree tree, bool isBlack, bool isUpdate = false, bool notWin = false)
         {
             if (tree != null)
             {
                 tree.Count++;
-                if (tree.IsBlack == isBlack)
+                if (tree.IsBlack == isBlack && !notWin)
                 {
                     tree.Win++;
                 }
@@ -122,9 +144,9 @@ namespace Zzb.ML.Gobang.AI
         {
             List<Point> list = new List<Point>();
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 8; i++)
             {
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < 8; j++)
                 {
                     if (map[i, j] == 0)
                     {
