@@ -37,6 +37,8 @@ namespace Zzb.ML.Gobang.AI
 
             var currentTrees = _service.GetTrees(_currentTree.MonteCarloTreeId);
 
+            long addCount = 0, updateCount = 0;
+
             foreach (var point in list)
             {
                 if (!(from t in currentTrees where t.X == point.X && t.Y == point.Y select t).Any())
@@ -51,6 +53,8 @@ namespace Zzb.ML.Gobang.AI
                         temp = temp.ParentTree;
                     }
                     _service.Save(_addList.Values.ToList(), _updateList);
+                    addCount += _addList.Count;
+                    updateCount += _updateList.Count;
                     _addList = new Dictionary<long, MonteCarloTree>();
                     _updateList = new List<MonteCarloTree>();
                 }
@@ -71,7 +75,7 @@ namespace Zzb.ML.Gobang.AI
                 return new Point(tree.X, tree.Y);
             }
 
-            Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】,{DateTime.Now}");
+            Log($"{(isBlack ? "黑棋" : "白棋")}下子【{tree.X + 1},{tree.Y + 1}】,新增了[{addCount}]条数据,更新了[{updateCount}]条数据,{DateTime.Now}");
             _currentTree = tree;
 
             return new Point(tree.X, tree.Y);
