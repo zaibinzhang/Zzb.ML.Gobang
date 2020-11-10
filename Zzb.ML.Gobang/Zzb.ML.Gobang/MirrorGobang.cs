@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Zzb.ML.EF;
-using Zzb_ML_GobangML.ConsoleApp;
 
 namespace Zzb.ML.Gobang
 {

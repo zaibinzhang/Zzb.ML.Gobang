@@ -9,8 +9,6 @@ using Zzb.ML.Common;
 using Zzb.ML.EF;
 using Zzb.ML.GameComponent;
 using Zzb.ML.Gobang.AI;
-using Zzb_ML_GobangML.ConsoleApp;
-using Zzb_ML_GobangML.Model;
 
 namespace Zzb.ML.Gobang
 {
@@ -482,65 +480,7 @@ namespace Zzb.ML.Gobang
             }
         }
 
-        public Point CalNext()
-        {
-            List<Point> list = new List<Point>();
-            float f = 0;
-            float f1 = 0;
-            Point point = new Point();
-            Point point1 = new Point();
-
-            for (int i = 0; i < MapList.Count; i++)
-            {
-                if (map[MapList[i].Y, MapList[i].X] == 0)
-                {
-                    ModelInput sampleData = new ModelInput()
-                    {
-                        IsBlack = color == 1,
-                        X = MapList[i].X,
-                        Y = MapList[i].Y
-                    };
-
-
-
-                    sampleData.SetPoint(map);
-
-                    var predictionResult = ConsumeModel.Predict(sampleData);
-
-                    var temp = predictionResult.Prediction
-                        ? predictionResult.Score.Max()
-                        : predictionResult.Score.Min();
-                    if (temp > f)
-                    {
-                        f1 = f;
-                        f = temp;
-                        point1 = point;
-                        point = MapList[i];
-                    }
-
-                    if (temp < f && temp > f1)
-                    {
-                        f1 = temp;
-                        point1 = MapList[i];
-                    }
-
-                    if (predictionResult.Prediction)
-                    {
-                        list.Add(MapList[i]);
-                    }
-                }
-            }
-
-            if (list.Count == 0)
-            {
-                //return new Random().NextDouble() > 0.5 ? point : point1;
-                return point;
-            }
-
-            return list[new Random().Next(list.Count)];
-
-        }
-
+     
         public void RandomGame()
         {
             List<EF.Gobang> gobangs = new List<EF.Gobang>();
