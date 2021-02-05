@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zzb.ML.Gobang.AI", "Zzb.ML.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zzb.ML.Gobang.AITests", "Zzb.ML.Gobang.AITests\Zzb.ML.Gobang.AITests.csproj", "{B1209B9B-F456-44A4-9EA0-428B28AC86F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zzb.DeepNeuralNetworks", "Zzb.DeepNeuralNetworks\Zzb.DeepNeuralNetworks.csproj", "{959BB777-71CD-4A5C-BE84-4B50CF52B6EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zzb.DeepNeuralNetworks", "Zzb.DeepNeuralNetworks\Zzb.DeepNeuralNetworks.csproj", "{959BB777-71CD-4A5C-BE84-4B50CF52B6EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zzb.DeepNeuralNetworks.Tests", "Zzb.DeepNeuralNetworks.Tests\Zzb.DeepNeuralNetworks.Tests.csproj", "{F8FB3752-491C-48DF-BA34-70493D277937}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{959BB777-71CD-4A5C-BE84-4B50CF52B6EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{959BB777-71CD-4A5C-BE84-4B50CF52B6EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{959BB777-71CD-4A5C-BE84-4B50CF52B6EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8FB3752-491C-48DF-BA34-70493D277937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8FB3752-491C-48DF-BA34-70493D277937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8FB3752-491C-48DF-BA34-70493D277937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8FB3752-491C-48DF-BA34-70493D277937}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

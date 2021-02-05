@@ -1,11 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Zzb.DeepNeuralNetworks
 {
     public class NetworkLayer
     {
-        private List<double> _neurons = new List<double>();
+        public NetworkLayer(int length)
+        {
+            _neurons = new double[length];
+        }
+
+        public NetworkLayer(double[] neurons)
+        {
+            _neurons = neurons;
+        }
+
+        public NetworkLayer(double[] neurons, params double[][] weight) : this(neurons)
+        {
+            _weights = (from w in weight select w.ToList()).ToList();
+        }
+
+        private double[] _neurons;
 
         /// <summary>
         /// 权重
@@ -53,10 +69,10 @@ namespace Zzb.DeepNeuralNetworks
         /// </summary>
         private void CalculateNeurons(NetworkLayer nextLayer)
         {
-            for (int i = 0; i < nextLayer._neurons.Count; i++)
+            for (int i = 0; i < nextLayer._neurons.Length; i++)
             {
                 double d = 0;
-                for (int j = 0; j < _neurons.Count; j++)
+                for (int j = 0; j < _neurons.Length; j++)
                 {
                     d += _neurons[j] * _weights[i][j];
                 }
@@ -78,7 +94,7 @@ namespace Zzb.DeepNeuralNetworks
                 foreach (var n in nextLayer._neurons)
                 {
                     List<double> list = new List<double>();
-                    for (int j = 0; j < _neurons.Count; j++)
+                    for (int j = 0; j < _neurons.Length; j++)
                     {
                         list.Add(1);
                     }
@@ -88,7 +104,7 @@ namespace Zzb.DeepNeuralNetworks
                 //添加偏倚
                 //if (_previousLayer != null) //输入层不需要添加偏倚
                 {
-                    for (int j = 0; j < _neurons.Count; j++)
+                    for (int j = 0; j < _neurons.Length; j++)
                     {
                         _bWeights.Add(1);
                     }
@@ -109,7 +125,7 @@ namespace Zzb.DeepNeuralNetworks
                 return;
             }
 
-            previousLayer._tolerances ??= new double[previousLayer._neurons.Count, _neurons.Count];
+            previousLayer._tolerances ??= new double[previousLayer._neurons.Length, _neurons.Length];
 
             //选择上一层的某个神经单元
             for (int i = 0; i < previousLayer._weights.Count; i++)
