@@ -18,6 +18,7 @@ namespace Zzb.DeepNeuralNetworks.Tests
                 new double[] { .25, .3 },
                 new[] { .35, .35 }
             );
+            var next = new NetworkLayer(2);
             net1.ForwardPropagation(new NetworkLayer(2));
         }
     }
