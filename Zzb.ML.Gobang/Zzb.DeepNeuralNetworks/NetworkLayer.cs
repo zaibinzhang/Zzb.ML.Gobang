@@ -26,7 +26,7 @@ namespace Zzb.DeepNeuralNetworks
         /// 前向传播
         /// </summary>
         /// <param name="nextLayer"></param>
-        private void ForwardPropagation(NetworkLayer nextLayer)
+        public void ForwardPropagation(NetworkLayer nextLayer)
         {
             if (nextLayer == null)
             {
