@@ -18,7 +18,9 @@ namespace Zzb.DeepNeuralNetworks
 
         public NetworkLayer(double[] neurons, params double[][] weight) : this(neurons)
         {
-            _weights = (from w in weight select w.ToList()).ToList();
+            var list = (from w in weight select w.ToList()).ToList();
+            _weights = list.GetRange(0, list.Count - 1);
+            _bWeights = list[^1];
         }
 
         private double[] _neurons;
