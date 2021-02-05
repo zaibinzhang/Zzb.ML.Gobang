@@ -23,6 +23,11 @@ namespace Zzb.DeepNeuralNetworks
             _bWeights = list[^1];
         }
 
+        public double GetNeurons(int index)
+        {
+            return _neurons[index];
+        }
+
         private double[] _neurons;
 
         /// <summary>

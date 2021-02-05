@@ -19,7 +19,8 @@ namespace Zzb.DeepNeuralNetworks.Tests
                 new[] { .35, .35 }
             );
             var next = new NetworkLayer(2);
-            net1.ForwardPropagation(new NetworkLayer(2));
+            net1.ForwardPropagation(next);
+            Assert.IsTrue(Math.Abs(next.GetNeurons(0) - 0.593) < 0.001&& Math.Abs(next.GetNeurons(1) - 0.596) < 0.001);
         }
     }
 }
