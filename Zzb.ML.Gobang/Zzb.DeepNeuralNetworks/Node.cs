@@ -3,10 +3,12 @@
 namespace Zzb.DeepNeuralNetworks
 {
     /// <summary>
-    /// 神经网络层
+    /// 点
     /// </summary>
-    public class NetworkLayer
+    public class Node
     {
-        public List<Node> Nodes { get; set; }
+        public double Value { get; set; }
+
+        public List<Edge> Edges { get; set; }
     }
 }
