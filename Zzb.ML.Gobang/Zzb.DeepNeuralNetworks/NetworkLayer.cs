@@ -8,5 +8,9 @@ namespace Zzb.DeepNeuralNetworks
     public class NetworkLayer
     {
         public List<Node> Nodes { get; set; }
+
+        public NetworkLayer PreLayer { get; set; }
+
+        public NetworkLayer NextLayer { get; set; }
     }
 }

@@ -10,5 +10,7 @@ namespace Zzb.DeepNeuralNetworks
         public double Value { get; set; }
 
         public List<Edge> Edges { get; set; }
+
+        public bool IsNode { get; set; } = true;
     }
 }
