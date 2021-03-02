@@ -24,7 +24,7 @@ namespace Zzb.DeepNeuralNetworks
                 tempLayer = tempLayer.NextLayer;
                 foreach (Node node in tempLayer.Nodes)
                 {
-                    node.Value = (from e in node.Edges where e.ToNode == node select e.FromNode.Value * e.Value).Sum();
+                    node.Value = Activation((from e in node.Edges where e.ToNode == node select e.FromNode.Value * e.Value).Sum());
                 }
             }
         }
