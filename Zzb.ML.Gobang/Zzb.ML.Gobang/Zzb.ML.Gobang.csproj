@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Zzb.ML.AI\Zzb.ML.AI.csproj" />
     <ProjectReference Include="..\Zzb.ML.GameComponent\Zzb.ML.GameComponent.csproj" />
   </ItemGroup>
 

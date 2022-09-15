@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System;
 using System.Collections.Generic;
+using Zzb.ML.AI;
 using Zzb.ML.GameComponent;
 
 namespace Zzb.ML.Gobang;
@@ -29,7 +30,7 @@ public partial class GameBoard
 
     private Point _point;
 
-    private readonly Random rand = new();
+    private readonly GoBangAi goBangAi = new();
 
     public void Check()
     {
@@ -38,23 +39,35 @@ public partial class GameBoard
 
     public Point RandomNextStep()
     {
-        while (true)
+        var point = goBangAi.CalculateNextStep(map, _whiteHistory, _blackHistory);
+        map[point.Y, point.X] = color;
+        if (color == 1)
         {
-            var point = new Point(rand.Next(gameSize), rand.Next(gameSize));
-            if (map[point.Y, point.X] == 0)
-            {
-                map[point.Y, point.X] = color;
-                AddChessman(IndexToScreen(point.X, point.Y), color);
-                if (color == 1)
-                {
-                    _whiteHistory.Add(point);
-                }
-                else
-                {
-                    _blackHistory.Add(point);
-                }
-                return point;
-            }
+            _blackHistory.Add(point);
         }
+        else
+        {
+            _whiteHistory.Add(point);
+        }
+        AddChessman(IndexToScreen(point.X, point.Y), color);
+        return point;
+        //while (true)
+        //{
+        //    var point = new Point(rand.Next(gameSize), rand.Next(gameSize));
+        //    if (map[point.Y, point.X] == 0)
+        //    {
+        //        map[point.Y, point.X] = color;
+        //        AddChessman(IndexToScreen(point.X, point.Y), color);
+        //        if (color == 1)
+        //        {
+        //            _whiteHistory.Add(point);
+        //        }
+        //        else
+        //        {
+        //            _blackHistory.Add(point);
+        //        }
+        //        return point;
+        //    }
+        //}
     }
 }
