@@ -1,5 +1,9 @@
 ﻿using System.Drawing;
 using System.Threading.Channels;
+using Keras.Layers;
+using Keras.Models;
+using Keras.Optimizers;
+using Numpy;
 
 namespace Zzb.ML.AI
 {
@@ -21,6 +25,32 @@ namespace Zzb.ML.AI
         }
 
         public void Train(List<Point> whiteHistory, List<Point> blackHistory)
+        {
+            Keras.Keras.DisablePySysConsoleLog = true;
+
+            var (x, y) = LoadRawData(whiteHistory, blackHistory);
+            var model = new Sequential();
+            model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
+                activation: "relu",
+                input_shape: (15, 15, 9), padding: "same"));
+            model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            model.Add(new Conv2D(16, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            model.Add(new Conv2D(8, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            model.Add(new Conv2D(1, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            model.Compile(loss: "categorical_crossentropy",
+                optimizer: new Adadelta(), metrics: new string[] { "accuracy" });
+            var h = model.Fit(x, y,
+                  epochs: 1,
+                  verbose: 1);
+        }
+
+        private (NDarray x, NDarray y) LoadRawData(List<Point> whiteHistory, List<Point> blackHistory)
         {
             var isBlack = blackHistory.Count > whiteHistory.Count;
             var totalSize = blackHistory.Count + whiteHistory.Count;
@@ -148,7 +178,7 @@ namespace Zzb.ML.AI
 
             }
 
-
+            return (np.array(arrX), np.array(arrY));
         }
     }
 }
