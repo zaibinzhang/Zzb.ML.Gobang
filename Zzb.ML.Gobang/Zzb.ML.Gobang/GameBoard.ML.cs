@@ -51,23 +51,5 @@ public partial class GameBoard
         }
         AddChessman(IndexToScreen(point.X, point.Y), color);
         return point;
-        //while (true)
-        //{
-        //    var point = new Point(rand.Next(gameSize), rand.Next(gameSize));
-        //    if (map[point.Y, point.X] == 0)
-        //    {
-        //        map[point.Y, point.X] = color;
-        //        AddChessman(IndexToScreen(point.X, point.Y), color);
-        //        if (color == 1)
-        //        {
-        //            _whiteHistory.Add(point);
-        //        }
-        //        else
-        //        {
-        //            _blackHistory.Add(point);
-        //        }
-        //        return point;
-        //    }
-        //}
     }
 }
