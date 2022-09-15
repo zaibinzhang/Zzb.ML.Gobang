@@ -34,7 +34,7 @@ public partial class GameBoard
 
     public void Check()
     {
-        IsGameEnd(_point);
+        goBangAi.Train(_whiteHistory, _blackHistory);
     }
 
     public Point RandomNextStep()
