@@ -9,6 +9,28 @@ namespace Zzb.ML.AI
 {
     public class GoBangAi
     {
+        static GoBangAi()
+        {
+            _model = new Sequential();
+            _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
+                activation: "relu",
+                input_shape: (15, 15, 9), padding: "same"));
+            _model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            _model.Add(new Conv2D(16, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            _model.Add(new Conv2D(8, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            _model.Add(new Conv2D(1, kernel_size: (3, 3).ToTuple(),
+                activation: "relu", padding: "same"));
+            _model.Compile(loss: "categorical_crossentropy",
+                optimizer: new Adam(), metrics: new string[] { "accuracy" });
+        }
+
+        private static readonly Sequential _model;
+
         private readonly Random rand = new();
 
         public Point CalculateNextStep(int[,] map, List<Point> whiteHistory, List<Point> blackHistory)
@@ -26,28 +48,138 @@ namespace Zzb.ML.AI
 
         public void Train(List<Point> whiteHistory, List<Point> blackHistory)
         {
-            Keras.Keras.DisablePySysConsoleLog = true;
-
             var (x, y) = LoadRawData(whiteHistory, blackHistory);
-            var model = new Sequential();
-            model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
-                activation: "relu",
-                input_shape: (15, 15, 9), padding: "same"));
-            model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            model.Add(new Conv2D(16, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            model.Add(new Conv2D(8, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            model.Add(new Conv2D(1, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            model.Compile(loss: "categorical_crossentropy",
-                optimizer: new Adadelta(), metrics: new string[] { "accuracy" });
-            var h = model.Fit(x, y,
+            var h = _model.Fit(x, y,
                   epochs: 1,
-                  verbose: 1);
+                  verbose: 0);
+            Predict(whiteHistory, blackHistory);
+        }
+
+        public int[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)
+        {
+            var isBlackGo = blackHistory.Count == whiteHistory.Count;
+            float[,,,] arrX = new float[1, 15, 15, 9];
+            int[,] mapWhite = new int[15, 15];
+            int[,] mapBlack = new int[15, 15];
+
+            foreach (var point in whiteHistory)
+            {
+                mapWhite[point.X, point.Y] = 1;
+            }
+
+            foreach (var point in blackHistory)
+            {
+                mapBlack[point.X, point.Y] = 1;
+            }
+
+            if (isBlackGo)
+            {
+                //构建历史步数
+                //构建黑色自己最近走过的步数
+                for (int j = 0; j < 3; j++)
+                {
+                    var blackHistCount = blackHistory.Count - 1 - j;
+                    if (blackHistCount >= 0)
+                    {
+                        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j] = 1;
+                    }
+                }
+                //构建白色最近走过的步数
+                for (int j = 0; j < 3; j++)
+                {
+                    var whiteHistCount = whiteHistory.Count - 1 - j;
+                    if (whiteHistCount >= 0)
+                    {
+                        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j + 3] = 1;
+                    }
+                }
+
+                //黑棋棋面
+                for (int j = 0; j < 15; j++)
+                {
+                    for (int k = 0; k < 15; k++)
+                    {
+                        arrX[0, j, k, 6] = mapBlack[j, k];
+                    }
+                }
+
+                //白棋棋面
+                for (int j = 0; j < 15; j++)
+                {
+                    for (int k = 0; k < 15; k++)
+                    {
+                        arrX[0, j, k, 7] = mapWhite[j, k];
+                    }
+                }
+
+                //是否先手
+                for (int j = 0; j < 15; j++)
+                {
+                    for (int k = 0; k < 15; k++)
+                    {
+                        arrX[0, j, k, 8] = 1;
+                    }
+                }
+
+            }
+            else
+            {
+                //构建历史步数
+                //构建白色最近走过的步数
+                for (int j = 0; j < 3; j++)
+                {
+                    var whiteHistCount = whiteHistory.Count - 1 - j;
+                    if (whiteHistCount >= 0)
+                    {
+                        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j] = 1;
+                    }
+                }
+
+                //构建黑色最近走过的步数
+                for (int j = 0; j < 3; j++)
+                {
+                    var blackHistCount = blackHistory.Count - 1 - j;
+                    if (blackHistCount >= 0)
+                    {
+                        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j + 3] = 1;
+                    }
+                }
+
+                //白棋棋面
+                for (int j = 0; j < 15; j++)
+                {
+                    for (int k = 0; k < 15; k++)
+                    {
+                        arrX[0, j, k, 6] = mapWhite[j, k];
+                    }
+                }
+
+                //黑棋棋面
+                for (int j = 0; j < 15; j++)
+                {
+                    for (int k = 0; k < 15; k++)
+                    {
+                        arrX[0, j, k, 7] = mapBlack[j, k];
+                    }
+                }
+
+            }
+
+            var pre = _model.Predict(np.array(arrX), verbose: 0);
+
+            var a = pre.reshape(-1);
+            var b = a[0];
+
+            int[,] res = new int[15, 15];
+
+            //for (int i = 0; i < 15; i++)
+            //{
+            //    for (int j = 0; j < 15; j++)
+            //    {
+            //        res[i, j] = pre[0][i][j];
+            //    }
+            //}
+            return res;
         }
 
         private (NDarray x, NDarray y) LoadRawData(List<Point> whiteHistory, List<Point> blackHistory)
