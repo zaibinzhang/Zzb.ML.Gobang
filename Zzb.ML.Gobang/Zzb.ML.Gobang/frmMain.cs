@@ -53,5 +53,14 @@ namespace Zzb.ML.Gobang
             MessageBox.Show("本游戏由火蜥蜴开发^_^，\nQQ：1906747819");
         }
 
+        private void autoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            board.RandomPlay();
+        }
+
+        private void checkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            board.Check();
+        }
     }
 }
