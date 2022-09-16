@@ -50,7 +50,7 @@ namespace Zzb.ML.AI
             }
         }
 
-        public void Train(List<Point> whiteHistory, List<Point> blackHistory)
+        public (double loss, double accuracy) Train(List<Point> whiteHistory, List<Point> blackHistory)
         {
             var (x, y) = LoadRawData(whiteHistory, blackHistory);
             var h = _model.Fit(x, y,
@@ -58,6 +58,7 @@ namespace Zzb.ML.AI
                   verbose: 0);
             var loss = h.HistoryLogs["loss"].GetValue(0);
             var accuracy = h.HistoryLogs["accuracy"].GetValue(0);
+            return ((double)loss, (double)accuracy);
         }
 
         public float[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)

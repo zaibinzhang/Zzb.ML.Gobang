@@ -16,8 +16,14 @@ public partial class GameBoard
 
     private bool hasData = false;
 
+    private FrmMessage _frmMessage;
+
+    private int _i = 1;
+
     public void AutoPlay()
     {
+        _frmMessage = new FrmMessage();
+        _frmMessage.Show();
         new Task(() =>
         {
             while (true)
@@ -48,7 +54,11 @@ public partial class GameBoard
                 point = AiNextStep();
             }
 
-            Invoke(() => { goBangAi.Train(whiteHistory, blackHistory); });
+            Invoke(() =>
+            {
+                var (l, a) = goBangAi.Train(whiteHistory, blackHistory);
+                _frmMessage.textBox1.Text = $"第{_i++}次训练，loss是{l},a是{a}\r\n" + _frmMessage.textBox1.Text;
+            });
         }
     }
 
@@ -74,7 +84,7 @@ public partial class GameBoard
         for (int i = 0; i < listSort.Count; i++)
         {
             var one = listSort[i];
-            if (one.Value==0)
+            if (one.Value == 0)
             {
                 return RandomNextStep();
             }
