@@ -26,7 +26,7 @@ namespace Zzb.ML.AI
             _model.Add(new Flatten());
             _model.Add(new Dense(225, activation: "softmax"));
             _model.Compile(loss: "categorical_crossentropy",
-                optimizer: new Adam(), metrics: new string[] { "accuracy" });
+                optimizer: new Adam(0.0001F), metrics: new string[] { "accuracy" });
         }
 
         private static readonly Sequential _model;
@@ -52,6 +52,8 @@ namespace Zzb.ML.AI
             var h = _model.Fit(x, y,
                   epochs: 1,
                   verbose: 0);
+            var loss = h.HistoryLogs["loss"].GetValue(0);
+            var accuracy = h.HistoryLogs["accuracy"].GetValue(0);
         }
 
         public float[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)
@@ -247,7 +249,7 @@ namespace Zzb.ML.AI
                     }
                 }
 
-                arrY[i * 2, blackHistory[i].X * 15 + blackHistory[i].Y] = isBlack ? 1 : -1;
+                //arrY[i * 2, blackHistory[i].X * 15 + blackHistory[i].Y] = isBlack ? 1 : -1;
 
                 if (!isBlack)
                 {
@@ -297,7 +299,7 @@ namespace Zzb.ML.AI
                         }
                     }
 
-                    arrY[i * 2 + 1, whiteHistory[i].X * 15 + whiteHistory[i].Y] = isBlack ? -1 : 1;
+                    //arrY[i * 2 + 1, whiteHistory[i].X * 15 + whiteHistory[i].Y] = isBlack ? -1 : 1;
 
                     mapWhite[whiteHistory[i].X, whiteHistory[i].Y] = 1;
                 }
