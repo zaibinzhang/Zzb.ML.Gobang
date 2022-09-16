@@ -55,12 +55,8 @@ namespace Zzb.ML.Gobang
 
         private void autoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            board.RandomPlay();
+            board.AutoPlay();
         }
 
-        private void checkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            board.Check();
-        }
     }
 }

@@ -35,7 +35,6 @@
             this.menuItemDebug = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemExit = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,8 +44,7 @@
             this.menu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.新游戏ToolStripMenuItem,
-            this.menuItemAbout,
-            this.checkToolStripMenuItem});
+            this.menuItemAbout});
             this.menu.Location = new System.Drawing.Point(0, 0);
             this.menu.Name = "menu";
             this.menu.Padding = new System.Windows.Forms.Padding(4, 3, 0, 3);
@@ -101,13 +99,6 @@
             this.menuItemAbout.Text = "关于";
             this.menuItemAbout.Click += new System.EventHandler(this.menuItemAbout_Click);
             // 
-            // checkToolStripMenuItem
-            // 
-            this.checkToolStripMenuItem.Name = "checkToolStripMenuItem";
-            this.checkToolStripMenuItem.Size = new System.Drawing.Size(53, 21);
-            this.checkToolStripMenuItem.Text = "check";
-            this.checkToolStripMenuItem.Click += new System.EventHandler(this.checkToolStripMenuItem_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -138,6 +129,5 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemDebug;
         private System.Windows.Forms.ToolStripMenuItem menuItemAbout;
         private System.Windows.Forms.ToolStripMenuItem autoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem checkToolStripMenuItem;
     }
 }

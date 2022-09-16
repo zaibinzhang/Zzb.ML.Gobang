@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Zzb.ML.AI;
 using Zzb.ML.GameComponent;
 
@@ -8,48 +9,113 @@ namespace Zzb.ML.Gobang;
 
 public partial class GameBoard
 {
-    private List<Point> _blackHistory;
+    private List<Point> blackHistory;
 
-    private List<Point> _whiteHistory;
+    private List<Point> whiteHistory;
 
-    public void RandomPlay()
+    private bool hasData = false;
+
+    public void AutoPlay()
     {
-        _blackHistory = new List<Point>();
-        _whiteHistory = new List<Point>();
+        blackHistory = new List<Point>();
+        whiteHistory = new List<Point>();
         color = 1;
         Createbackgroudimage();
         map = new int[gameSize + 1, gameSize + 1];
-        _point = RandomNextStep();
-        while (!IsGameEnd(_point))
+        if (!hasData)
         {
-            color = 3 - color;
-            _point = RandomNextStep();
-        }
-        OnGameEnd(this, new GameEndEventArgs(color));
-    }
-
-    private Point _point;
-
-    private readonly GoBangAi goBangAi = new();
-
-    public void Check()
-    {
-        goBangAi.Train(_whiteHistory, _blackHistory);
-    }
-
-    public Point RandomNextStep()
-    {
-        var point = goBangAi.CalculateNextStep(map, _whiteHistory, _blackHistory);
-        map[point.Y, point.X] = color;
-        if (color == 1)
-        {
-            _blackHistory.Add(point);
+            RandomPlay();
+            hasData = true;
         }
         else
         {
-            _whiteHistory.Add(point);
+            var point = AiNextStep();
+            while (!IsGameEnd(point))
+            {
+                color = 3 - color;
+                point = AiNextStep();
+            }
+            goBangAi.Train(whiteHistory, blackHistory);
+
+        }
+        AutoPlay();
+    }
+
+    public Point AiNextStep()
+    {
+        var mapValue = goBangAi.Predict(whiteHistory, blackHistory);
+
+        var list = new List<MapValueItem>();
+        for (int i = 0; i < 15; i++)
+        {
+            for (int j = 0; j < 15; j++)
+            {
+                list.Add(new MapValueItem() { X = i, Y = j, Value = mapValue[i, j] });
+            }
+        }
+
+        var listSort = (from i in list orderby i.Value select i).ToList();
+
+        var point = new Point();
+        for (int i = 0; i < listSort.Count; i++)
+        {
+            var one = listSort[i];
+            point = new Point(one.X, one.Y);
+            if (map[one.X, one.Y] == 0)
+            {
+                if (color == 1)
+                {
+                    blackHistory.Add(point);
+                }
+                else
+                {
+                    whiteHistory.Add(point);
+                }
+                map[point.X, point.Y] = color;
+                AddChessman(IndexToScreen(point.X, point.Y), color);
+                return point;
+            }
+        }
+        return point;
+    }
+
+    public void RandomPlay()
+    {
+        var point = RandomNextStep();
+        while (!IsGameEnd(point))
+        {
+            color = 3 - color;
+            point = RandomNextStep();
+        }
+        goBangAi.Train(whiteHistory, blackHistory);
+        //OnGameEnd(this, new GameEndEventArgs(color));
+    }
+
+
+    private readonly GoBangAi goBangAi = new();
+
+    public Point RandomNextStep()
+    {
+        var point = goBangAi.CalculateNextStep(map, whiteHistory, blackHistory);
+        map[point.X, point.Y] = color;
+        if (color == 1)
+        {
+            blackHistory.Add(point);
+        }
+        else
+        {
+            whiteHistory.Add(point);
         }
         AddChessman(IndexToScreen(point.X, point.Y), color);
         return point;
+    }
+
+    private class MapValueItem
+    {
+        public int X { get; set; }
+
+        public int Y { get; set; }
+
+        public float Value { get; set; }
     }
 }
