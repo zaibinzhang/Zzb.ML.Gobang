@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Zzb.ML.AI;
 using Zzb.ML.GameComponent;
 
@@ -17,10 +18,21 @@ public partial class GameBoard
 
     public void AutoPlay()
     {
+        new Task(() =>
+        {
+            while (true)
+            {
+                AutoPlayTask();
+            }
+        }).Start();
+    }
+
+    private void AutoPlayTask()
+    {
         blackHistory = new List<Point>();
         whiteHistory = new List<Point>();
         color = 1;
-        Createbackgroudimage();
+        Invoke(Createbackgroudimage);
         map = new int[gameSize + 1, gameSize + 1];
         if (!hasData)
         {
@@ -35,24 +47,26 @@ public partial class GameBoard
                 color = 3 - color;
                 point = AiNextStep();
             }
-            goBangAi.Train(whiteHistory, blackHistory);
 
+            Invoke(() => { goBangAi.Train(whiteHistory, blackHistory); });
         }
-        AutoPlay();
     }
 
     public Point AiNextStep()
     {
-        var mapValue = goBangAi.Predict(whiteHistory, blackHistory);
-
         var list = new List<MapValueItem>();
-        for (int i = 0; i < 15; i++)
+        Invoke(() =>
         {
-            for (int j = 0; j < 15; j++)
+            var mapValue = goBangAi.Predict(whiteHistory, blackHistory);
+            for (int i = 0; i < 15; i++)
             {
-                list.Add(new MapValueItem() { X = i, Y = j, Value = mapValue[i, j] });
+                for (int j = 0; j < 15; j++)
+                {
+                    list.Add(new MapValueItem() { X = i, Y = j, Value = mapValue[i, j] });
+                }
             }
-        }
+        });
+
 
         var listSort = (from i in list orderby i.Value select i).ToList();
 
@@ -72,7 +86,7 @@ public partial class GameBoard
                     whiteHistory.Add(point);
                 }
                 map[point.X, point.Y] = color;
-                AddChessman(IndexToScreen(point.X, point.Y), color);
+                Invoke(() => { AddChessman(IndexToScreen(point.X, point.Y), color); });
                 return point;
             }
         }
@@ -87,7 +101,8 @@ public partial class GameBoard
             color = 3 - color;
             point = RandomNextStep();
         }
-        goBangAi.Train(whiteHistory, blackHistory);
+
+        Invoke(() => { goBangAi.Train(whiteHistory, blackHistory); });
         //OnGameEnd(this, new GameEndEventArgs(color));
     }
 
@@ -106,7 +121,9 @@ public partial class GameBoard
         {
             whiteHistory.Add(point);
         }
-        AddChessman(IndexToScreen(point.X, point.Y), color);
+
+        Invoke(() => { AddChessman(IndexToScreen(point.X, point.Y), color); });
+
         return point;
     }
 
