@@ -17,10 +17,14 @@ namespace Zzb.ML.AI
                 input_shape: (15, 15, 9), padding: "same"));
             _model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
                 activation: "relu", padding: "same"));
-            _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
             _model.Add(new Conv2D(128, kernel_size: (3, 3).ToTuple(),
                 activation: "relu", padding: "same"));
+            _model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
+    activation: "relu", padding: "same"));
+            _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
+    activation: "relu", padding: "same"));
+            _model.Add(new Conv2D(16, kernel_size: (3, 3).ToTuple(),
+    activation: "relu", padding: "same"));
             _model.Add(new Conv2D(4, kernel_size: (1, 1).ToTuple(),
                 activation: "relu", padding: "same"));
             _model.Add(new Flatten());
