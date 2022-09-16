@@ -224,10 +224,10 @@ namespace Zzb.ML.AI
                     for (int k = 0; k < 15; k++)
                     {
                         arrX[i * 2, j, k, 6] = mapBlack[j, k];
-                        if (mapBlack[j, k] == 1)
-                        {
-                            arrY[i * 2, j * 15 + k] = -1;
-                        }
+                        //if (mapBlack[j, k] == 1)
+                        //{
+                        //    arrY[i * 2, j * 15 + k] = -1;
+                        //}
                     }
                 }
 
@@ -237,10 +237,10 @@ namespace Zzb.ML.AI
                     for (int k = 0; k < 15; k++)
                     {
                         arrX[i * 2, j, k, 7] = mapWhite[j, k];
-                        if (mapWhite[j, k] == 1)
-                        {
-                            arrY[i * 2, j * 15 + k] = -1;
-                        }
+                        //if (mapWhite[j, k] == 1)
+                        //{
+                        //    arrY[i * 2, j * 15 + k] = -1;
+                        //}
                     }
                 }
 
@@ -253,7 +253,7 @@ namespace Zzb.ML.AI
                     }
                 }
 
-                //arrY[i * 2, blackHistory[i].X * 15 + blackHistory[i].Y] = isBlack ? 1 : -1;
+                arrY[i * 2, blackHistory[i].X * 15 + blackHistory[i].Y] = isBlack ? 1 : -1;
 
                 if (!isBlack)
                 {
@@ -283,10 +283,10 @@ namespace Zzb.ML.AI
                         for (int k = 0; k < 15; k++)
                         {
                             arrX[i * 2 + 1, j, k, 6] = mapWhite[j, k];
-                            if (mapWhite[j, k] == 1)
-                            {
-                                arrY[i * 2 + 1, j * 15 + k] = -1;
-                            }
+                            //if (mapWhite[j, k] == 1)
+                            //{
+                            //    arrY[i * 2 + 1, j * 15 + k] = -1;
+                            //}
                         }
                     }
 
@@ -296,14 +296,14 @@ namespace Zzb.ML.AI
                         for (int k = 0; k < 15; k++)
                         {
                             arrX[i * 2 + 1, j, k, 7] = mapBlack[j, k];
-                            if (mapBlack[j, k] == 1)
-                            {
-                                arrY[i * 2 + 1, j * 15 + k] = -1;
-                            }
+                            //if (mapBlack[j, k] == 1)
+                            //{
+                            //    arrY[i * 2 + 1, j * 15 + k] = -1;
+                            //}
                         }
                     }
 
-                    //arrY[i * 2 + 1, whiteHistory[i].X * 15 + whiteHistory[i].Y] = isBlack ? -1 : 1;
+                    arrY[i * 2 + 1, whiteHistory[i].X * 15 + whiteHistory[i].Y] = isBlack ? -1 : 1;
 
                     mapWhite[whiteHistory[i].X, whiteHistory[i].Y] = 1;
                 }
