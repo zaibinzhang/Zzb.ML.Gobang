@@ -11,8 +11,6 @@ namespace Zzb.ML.AI
     {
         static GoBangAi()
         {
-
-            var lr = 1e-4f;
             _model = new Sequential();
             _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
                 activation: "relu",
@@ -25,12 +23,10 @@ namespace Zzb.ML.AI
                 activation: "relu", padding: "same"));
             _model.Add(new Conv2D(4, kernel_size: (1, 1).ToTuple(),
                 activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(1, kernel_size: (1, 1).ToTuple(),
-            //    activation: "relu", padding: "same"));
             _model.Add(new Flatten());
             _model.Add(new Dense(225, activation: "softmax"));
             _model.Compile(loss: "categorical_crossentropy",
-                optimizer: new Adam(2e-4f), metrics: new string[] { "accuracy" });
+                optimizer: new Adam(), metrics: new string[] { "accuracy" });
         }
 
         private static readonly Sequential _model;

@@ -62,20 +62,24 @@ public partial class GameBoard
             {
                 for (int j = 0; j < 15; j++)
                 {
-                    list.Add(new MapValueItem() { X = i, Y = j, Value = mapValue[i, j] });
+                    list.Add(new MapValueItem() { X = j, Y = i, Value = mapValue[i, j] });
                 }
             }
         });
 
 
-        var listSort = (from i in list orderby i.Value select i).ToList();
+        var listSort = (from i in list orderby i.Value descending select i).ToList();
 
         var point = new Point();
         for (int i = 0; i < listSort.Count; i++)
         {
             var one = listSort[i];
+            if (one.Value==0)
+            {
+                return RandomNextStep();
+            }
             point = new Point(one.X, one.Y);
-            if (map[one.X, one.Y] == 0)
+            if (map[one.Y, one.X] == 0)
             {
                 if (color == 1)
                 {
@@ -85,7 +89,7 @@ public partial class GameBoard
                 {
                     whiteHistory.Add(point);
                 }
-                map[point.X, point.Y] = color;
+                map[point.Y, point.X] = color;
                 Invoke(() => { AddChessman(IndexToScreen(point.X, point.Y), color); });
                 return point;
             }
@@ -112,7 +116,7 @@ public partial class GameBoard
     public Point RandomNextStep()
     {
         var point = goBangAi.CalculateNextStep(map, whiteHistory, blackHistory);
-        map[point.X, point.Y] = color;
+        map[point.Y, point.X] = color;
         if (color == 1)
         {
             blackHistory.Add(point);
