@@ -50,7 +50,7 @@ namespace Zzb.ML.AI
         {
             var (x, y) = LoadRawData(whiteHistory, blackHistory, isWin);
             var h = _model.Fit(x, y,
-                  epochs: 1,
+                  epochs: 25,
                   verbose: 0);
             var loss = h.HistoryLogs["loss"].GetValue(h.Epoch.Length - 1);
             var accuracy = h.HistoryLogs["accuracy"].GetValue(h.Epoch.Length - 1);
@@ -96,14 +96,6 @@ namespace Zzb.ML.AI
                     }
                 }
 
-                ////是否先手
-                //for (int j = 0; j < GameSize; j++)
-                //{
-                //    for (int k = 0; k < GameSize; k++)
-                //    {
-                //        arrX[0, j, k, 2] = 1;
-                //    }
-                //}
 
             }
             else
@@ -149,10 +141,19 @@ namespace Zzb.ML.AI
             var isBlack = blackHistory.Count > whiteHistory.Count;
             var totalSize = blackHistory.Count + whiteHistory.Count;
             int[,,,] arrX = new int[totalSize, GameSize, GameSize, 2];
-            int[,] arrY = new int[totalSize, GameSize * GameSize];
+            float[,] arrY = new float[totalSize, GameSize * GameSize];
             int[,] mapWhite = new int[GameSize, GameSize];
             int[,] mapBlack = new int[GameSize, GameSize];
-
+            for (int i = 0; i < totalSize; i++)
+            {
+                for (int j = 0; j < GameSize; j++)
+                {
+                    for (int k = 0; k < GameSize; k++)
+                    {
+                        arrY[i, j * GameSize + k] = 0.1f;
+                    }
+                }
+            }
             for (int i = 0; i < blackHistory.Count; i++)
             {
                 //构建黑色的输入参数
@@ -163,6 +164,11 @@ namespace Zzb.ML.AI
                     for (int k = 0; k < GameSize; k++)
                     {
                         arrX[i * 2, j, k, 0] = mapBlack[j, k];
+                        if (mapBlack[j, k]>0)
+                        {
+                            arrY[i * 2, j * GameSize + k] = 0;
+                        }
+          
                     }
                 }
 
@@ -172,6 +178,10 @@ namespace Zzb.ML.AI
                     for (int k = 0; k < GameSize; k++)
                     {
                         arrX[i * 2, j, k, 1] = mapWhite[j, k];
+                        if (mapWhite[j, k]==1)
+                        {
+                            arrY[i * 2, j * GameSize + k] = 0;
+                        }
                     }
                 }
 
@@ -186,12 +196,12 @@ namespace Zzb.ML.AI
 
                 if (isWin)
                 {
-                    arrY[i * 2, blackHistory[i].X * GameSize + blackHistory[i].Y] = isBlack ? 1 : -1;
+                    arrY[i * 2, blackHistory[i].X * GameSize + blackHistory[i].Y] = isBlack ? 1 : 0;
                 }
 
                 mapBlack[blackHistory[i].X, blackHistory[i].Y] = 1;
 
-                if (!isBlack)
+                if (i < whiteHistory.Count)
                 {
                     //构建白色的输入参数
                     //构建白色目前局面的着点
@@ -200,6 +210,11 @@ namespace Zzb.ML.AI
                         for (int k = 0; k < GameSize; k++)
                         {
                             arrX[i * 2 + 1, j, k, 0] = mapWhite[j, k];
+                            if (mapWhite[j, k]>0)
+                            {
+                                arrY[i * 2 + 1, j * GameSize + k] = 0;
+                            }
+                          
                         }
                     }
 
@@ -209,12 +224,16 @@ namespace Zzb.ML.AI
                         for (int k = 0; k < GameSize; k++)
                         {
                             arrX[i * 2 + 1, j, k, 1] = mapBlack[j, k];
+                            if (mapBlack[j, k]>0)
+                            {
+                                arrY[i * 2 + 1, j * GameSize + k] = 0;
+                            }
                         }
                     }
 
                     if (isWin)
                     {
-                        arrY[i * 2 + 1, whiteHistory[i].X * GameSize + whiteHistory[i].Y] = isBlack ? -1 : 1;
+                        arrY[i * 2 + 1, whiteHistory[i].X * GameSize + whiteHistory[i].Y] = isBlack ? 0 : 1;
                     }
 
                     mapWhite[whiteHistory[i].X, whiteHistory[i].Y] = 1;
