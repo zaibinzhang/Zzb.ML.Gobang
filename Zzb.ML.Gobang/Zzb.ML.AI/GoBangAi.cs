@@ -231,10 +231,10 @@ namespace Zzb.ML.AI
                     for (int k = 0; k < GameSize; k++)
                     {
                         arrX[i * 2, j, k, 0] = mapBlack[j, k];
-                        if (mapBlack[j, k] == 1)
-                        {
-                            arrY[i * 2, j * GameSize + k] = -1;
-                        }
+                        //if (mapBlack[j, k] == 1)
+                        //{
+                        //    arrY[i * 2, j * GameSize + k] = -1;
+                        //}
                     }
                 }
 
@@ -244,10 +244,10 @@ namespace Zzb.ML.AI
                     for (int k = 0; k < GameSize; k++)
                     {
                         arrX[i * 2, j, k, 1] = mapWhite[j, k];
-                        if (mapWhite[j, k] == 1)
-                        {
-                            arrY[i * 2, j * GameSize + k] = -1;
-                        }
+                        //if (mapWhite[j, k] == 1)
+                        //{
+                        //    arrY[i * 2, j * GameSize + k] = -1;
+                        //}
                     }
                 }
 
@@ -295,10 +295,10 @@ namespace Zzb.ML.AI
                         for (int k = 0; k < GameSize; k++)
                         {
                             arrX[i * 2 + 1, j, k, 0] = mapWhite[j, k];
-                            if (mapWhite[j, k] == 1)
-                            {
-                                arrY[i * 2 + 1, j * GameSize + k] = -1;
-                            }
+                            //if (mapWhite[j, k] == 1)
+                            //{
+                            //    arrY[i * 2 + 1, j * GameSize + k] = -1;
+                            //}
                         }
                     }
 
@@ -308,10 +308,10 @@ namespace Zzb.ML.AI
                         for (int k = 0; k < GameSize; k++)
                         {
                             arrX[i * 2 + 1, j, k, 1] = mapBlack[j, k];
-                            if (mapBlack[j, k] == 1)
-                            {
-                                arrY[i * 2 + 1, j * GameSize + k] = -1;
-                            }
+                            //if (mapBlack[j, k] == 1)
+                            //{
+                            //    arrY[i * 2 + 1, j * GameSize + k] = -1;
+                            //}
                         }
                     }
 

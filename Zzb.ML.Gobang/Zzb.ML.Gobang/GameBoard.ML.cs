@@ -56,8 +56,10 @@ public partial class GameBoard
 
             Invoke(() =>
             {
+                var isWin = IsGameEnd(point);
                 var (l, a) = goBangAi.Train(whiteHistory, blackHistory, IsGameEnd(point));
-                _frmMessage.textBox1.Text = $"第{_i++}次训练，loss是{l},a是{a}\r\n" + _frmMessage.textBox1.Text;
+                var str = isWin ? color == 1 ? "黑胜" : "白胜" : "平局";
+                _frmMessage.textBox1.Text = $"第{_i++}次训练，loss是{l},a是{a},{str}\r\n" + _frmMessage.textBox1.Text;
             });
         }
     }
