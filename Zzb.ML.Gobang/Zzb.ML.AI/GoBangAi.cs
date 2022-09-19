@@ -34,7 +34,7 @@ namespace Zzb.ML.AI
             _model.Add(new Conv2D(4, kernel_size: (1, 1).ToTuple(),
                 activation: "relu", padding: "same"));
             _model.Add(new Flatten());
-            _model.Add(new Dense(225, activation: "softmax"));
+            _model.Add(new Dense(GameSize * GameSize, activation: "softmax"));
             _model.Compile(loss: "categorical_crossentropy",
                 optimizer: new Adam(0.0001F), metrics: new string[] { "accuracy" });
         }
@@ -197,7 +197,7 @@ namespace Zzb.ML.AI
             var isBlack = blackHistory.Count > whiteHistory.Count;
             var totalSize = blackHistory.Count + whiteHistory.Count;
             int[,,,] arrX = new int[totalSize, GameSize, GameSize, 3];
-            int[,] arrY = new int[totalSize, 225];
+            int[,] arrY = new int[totalSize, GameSize*GameSize];
             int[,] mapWhite = new int[GameSize, GameSize];
             int[,] mapBlack = new int[GameSize, GameSize];
 
