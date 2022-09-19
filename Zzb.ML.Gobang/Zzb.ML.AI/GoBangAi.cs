@@ -9,12 +9,14 @@ namespace Zzb.ML.AI
 {
     public class GoBangAi
     {
+        public static int GameSize => 6;
+
         static GoBangAi()
         {
             _model = new Sequential();
             _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
                 activation: "relu",
-                input_shape: (15, 15, 9), padding: "same"));
+                input_shape: (GameSize, GameSize, 3), padding: "same"));
             _model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
                 activation: "relu", padding: "same"));
             _model.Add(new Conv2D(128, kernel_size: (3, 3).ToTuple(),
@@ -54,9 +56,9 @@ namespace Zzb.ML.AI
             }
         }
 
-        public (double loss, double accuracy) Train(List<Point> whiteHistory, List<Point> blackHistory)
+        public (double loss, double accuracy) Train(List<Point> whiteHistory, List<Point> blackHistory, bool isWin = true)
         {
-            var (x, y) = LoadRawData(whiteHistory, blackHistory);
+            var (x, y) = LoadRawData(whiteHistory, blackHistory, isWin);
             var h = _model.Fit(x, y,
                   epochs: 1,
                   verbose: 0);
@@ -68,9 +70,9 @@ namespace Zzb.ML.AI
         public float[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)
         {
             var isBlackGo = blackHistory.Count == whiteHistory.Count;
-            float[,,,] arrX = new float[1, 15, 15, 9];
-            int[,] mapWhite = new int[15, 15];
-            int[,] mapBlack = new int[15, 15];
+            float[,,,] arrX = new float[1, GameSize, GameSize, 3];
+            int[,] mapWhite = new int[GameSize, GameSize];
+            int[,] mapBlack = new int[GameSize, GameSize];
 
             foreach (var point in whiteHistory)
             {
@@ -84,50 +86,50 @@ namespace Zzb.ML.AI
 
             if (isBlackGo)
             {
-                //构建历史步数
-                //构建黑色自己最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var blackHistCount = blackHistory.Count - 1 - j;
-                    if (blackHistCount >= 0)
-                    {
-                        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j] = 1;
-                    }
-                }
-                //构建白色最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var whiteHistCount = whiteHistory.Count - 1 - j;
-                    if (whiteHistCount >= 0)
-                    {
-                        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j + 3] = 1;
-                    }
-                }
+                ////构建历史步数
+                ////构建黑色自己最近走过的步数
+                //for (int j = 0; j < 3; j++)
+                //{
+                //    var blackHistCount = blackHistory.Count - 1 - j;
+                //    if (blackHistCount >= 0)
+                //    {
+                //        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j] = 1;
+                //    }
+                //}
+                ////构建白色最近走过的步数
+                //for (int j = 0; j < 3; j++)
+                //{
+                //    var whiteHistCount = whiteHistory.Count - 1 - j;
+                //    if (whiteHistCount >= 0)
+                //    {
+                //        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j + 3] = 1;
+                //    }
+                //}
 
                 //黑棋棋面
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[0, j, k, 6] = mapBlack[j, k];
+                        arrX[0, j, k, 0] = mapBlack[j, k];
                     }
                 }
 
                 //白棋棋面
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[0, j, k, 7] = mapWhite[j, k];
+                        arrX[0, j, k, 1] = mapWhite[j, k];
                     }
                 }
 
                 //是否先手
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[0, j, k, 8] = 1;
+                        arrX[0, j, k, 2] = 1;
                     }
                 }
 
@@ -136,40 +138,40 @@ namespace Zzb.ML.AI
             {
                 //构建历史步数
                 //构建白色最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var whiteHistCount = whiteHistory.Count - 1 - j;
-                    if (whiteHistCount >= 0)
-                    {
-                        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j] = 1;
-                    }
-                }
+                //for (int j = 0; j < 3; j++)
+                //{
+                //    var whiteHistCount = whiteHistory.Count - 1 - j;
+                //    if (whiteHistCount >= 0)
+                //    {
+                //        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j] = 1;
+                //    }
+                //}
 
-                //构建黑色最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var blackHistCount = blackHistory.Count - 1 - j;
-                    if (blackHistCount >= 0)
-                    {
-                        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j + 3] = 1;
-                    }
-                }
+                ////构建黑色最近走过的步数
+                //for (int j = 0; j < 3; j++)
+                //{
+                //    var blackHistCount = blackHistory.Count - 1 - j;
+                //    if (blackHistCount >= 0)
+                //    {
+                //        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j + 3] = 1;
+                //    }
+                //}
 
                 //白棋棋面
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[0, j, k, 6] = mapWhite[j, k];
+                        arrX[0, j, k, 0] = mapWhite[j, k];
                     }
                 }
 
                 //黑棋棋面
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[0, j, k, 7] = mapBlack[j, k];
+                        arrX[0, j, k, 1] = mapBlack[j, k];
                     }
                 }
 
@@ -178,26 +180,26 @@ namespace Zzb.ML.AI
             var pre = _model.Predict(np.array(arrX), verbose: 0).reshape(-1);
 
 
-            float[,] res = new float[15, 15];
+            float[,] res = new float[GameSize, GameSize];
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < GameSize; i++)
             {
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    res[i, j] = pre[i * 15 + j].item<float>();
+                    res[i, j] = pre[i * GameSize + j].item<float>();
                 }
             }
             return res;
         }
 
-        private (NDarray x, NDarray y) LoadRawData(List<Point> whiteHistory, List<Point> blackHistory)
+        private (NDarray x, NDarray y) LoadRawData(List<Point> whiteHistory, List<Point> blackHistory, bool isWin)
         {
             var isBlack = blackHistory.Count > whiteHistory.Count;
             var totalSize = blackHistory.Count + whiteHistory.Count;
-            int[,,,] arrX = new int[totalSize, 15, 15, 9];
+            int[,,,] arrX = new int[totalSize, GameSize, GameSize, 3];
             int[,] arrY = new int[totalSize, 225];
-            int[,] mapWhite = new int[15, 15];
-            int[,] mapBlack = new int[15, 15];
+            int[,] mapWhite = new int[GameSize, GameSize];
+            int[,] mapBlack = new int[GameSize, GameSize];
 
             for (int i = 0; i < blackHistory.Count; i++)
             {
@@ -205,117 +207,124 @@ namespace Zzb.ML.AI
 
                 //构建历史步数
                 //构建黑色自己最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var blackHistCount = i - 1 - j;
-                    if (blackHistCount >= 0)
-                    {
-                        arrX[i * 2, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j] = 1;
-                    }
-                }
-                //构建白色最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var whiteHistCount = i - 1 - j;
-                    if (whiteHistCount >= 0)
-                    {
-                        arrX[i * 2, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j + 3] = 1;
-                    }
-                }
+                //for (int j = 0; j < 3; j++)
+                //{
+                //    var blackHistCount = i - 1 - j;
+                //    if (blackHistCount >= 0)
+                //    {
+                //        arrX[i * 2, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j] = 1;
+                //    }
+                //}
+                ////构建白色最近走过的步数
+                //for (int j = 0; j < 3; j++)
+                //{
+                //    var whiteHistCount = i - 1 - j;
+                //    if (whiteHistCount >= 0)
+                //    {
+                //        arrX[i * 2, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j + 3] = 1;
+                //    }
+                //}
 
                 //构建黑色目前局面的着点
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[i * 2, j, k, 6] = mapBlack[j, k];
+                        arrX[i * 2, j, k, 0] = mapBlack[j, k];
                         if (mapBlack[j, k] == 1)
                         {
-                            arrY[i * 2, j * 15 + k] = -1;
+                            arrY[i * 2, j * GameSize + k] = -1;
                         }
                     }
                 }
 
                 //构建白色目前局面的着点
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[i * 2, j, k, 7] = mapWhite[j, k];
+                        arrX[i * 2, j, k, 1] = mapWhite[j, k];
                         if (mapWhite[j, k] == 1)
                         {
-                            arrY[i * 2, j * 15 + k] = -1;
+                            arrY[i * 2, j * GameSize + k] = -1;
                         }
                     }
                 }
 
                 //是否先手
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < GameSize; j++)
                 {
-                    for (int k = 0; k < 15; k++)
+                    for (int k = 0; k < GameSize; k++)
                     {
-                        arrX[i * 2, j, k, 8] = 1;
+                        arrX[i * 2, j, k, 2] = 1;
                     }
                 }
 
-                arrY[i * 2, blackHistory[i].X * 15 + blackHistory[i].Y] = isBlack ? 1 : -1;
+                if (isWin)
+                {
+                    arrY[i * 2, blackHistory[i].X * GameSize + blackHistory[i].Y] = isBlack ? 1 : -1;
+                }
+               
                 mapBlack[blackHistory[i].X, blackHistory[i].Y] = 1;
 
                 if (!isBlack)
                 {
                     //构建白色的输入参数
                     //构建白色最近走过的步数
-                    for (int j = 0; j < 3; j++)
-                    {
-                        var whiteHistCount = i - 1 - j;
-                        if (whiteHistCount >= 0)
-                        {
-                            arrX[i * 2 + 1, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j] = 1;
-                        }
-                    }
-                    //构建黑色最近走过的步数
-                    for (int j = 0; j < 3; j++)
-                    {
-                        var blackHistCount = i - 1 - j;
-                        if (blackHistCount >= 0)
-                        {
-                            arrX[i * 2 + 1, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j + 3] = 1;
-                        }
-                    }
+                    //for (int j = 0; j < 3; j++)
+                    //{
+                    //    var whiteHistCount = i - 1 - j;
+                    //    if (whiteHistCount >= 0)
+                    //    {
+                    //        arrX[i * 2 + 1, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j] = 1;
+                    //    }
+                    //}
+                    ////构建黑色最近走过的步数
+                    //for (int j = 0; j < 3; j++)
+                    //{
+                    //    var blackHistCount = i - 1 - j;
+                    //    if (blackHistCount >= 0)
+                    //    {
+                    //        arrX[i * 2 + 1, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j + 3] = 1;
+                    //    }
+                    //}
 
                     //构建白色目前局面的着点
-                    for (int j = 0; j < 15; j++)
+                    for (int j = 0; j < GameSize; j++)
                     {
-                        for (int k = 0; k < 15; k++)
+                        for (int k = 0; k < GameSize; k++)
                         {
-                            arrX[i * 2 + 1, j, k, 6] = mapWhite[j, k];
+                            arrX[i * 2 + 1, j, k, 0] = mapWhite[j, k];
                             if (mapWhite[j, k] == 1)
                             {
-                                arrY[i * 2 + 1, j * 15 + k] = -1;
+                                arrY[i * 2 + 1, j * GameSize + k] = -1;
                             }
                         }
                     }
 
                     //构建黑色目前局面的着点
-                    for (int j = 0; j < 15; j++)
+                    for (int j = 0; j < GameSize; j++)
                     {
-                        for (int k = 0; k < 15; k++)
+                        for (int k = 0; k < GameSize; k++)
                         {
-                            arrX[i * 2 + 1, j, k, 7] = mapBlack[j, k];
+                            arrX[i * 2 + 1, j, k, 1] = mapBlack[j, k];
                             if (mapBlack[j, k] == 1)
                             {
-                                arrY[i * 2 + 1, j * 15 + k] = -1;
+                                arrY[i * 2 + 1, j * GameSize + k] = -1;
                             }
                         }
                     }
 
-                    arrY[i * 2 + 1, whiteHistory[i].X * 15 + whiteHistory[i].Y] = isBlack ? -1 : 1;
+                    if (isWin)
+                    {
+                        arrY[i * 2 + 1, whiteHistory[i].X * GameSize + whiteHistory[i].Y] = isBlack ? -1 : 1;
+                    }
 
                     mapWhite[whiteHistory[i].X, whiteHistory[i].Y] = 1;
                 }
 
 
-   
+
 
             }
             return (np.array(arrX), np.array(arrY));

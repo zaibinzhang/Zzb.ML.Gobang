@@ -48,7 +48,7 @@ public partial class GameBoard
         else
         {
             var point = AiNextStep();
-            while (!IsGameEnd(point))
+            while (!IsGameEnd(point) && whiteHistory.Count + blackHistory.Count < gameSize * gameSize)
             {
                 color = 3 - color;
                 point = AiNextStep();
@@ -56,7 +56,7 @@ public partial class GameBoard
 
             Invoke(() =>
             {
-                var (l, a) = goBangAi.Train(whiteHistory, blackHistory);
+                var (l, a) = goBangAi.Train(whiteHistory, blackHistory, IsGameEnd(point));
                 _frmMessage.textBox1.Text = $"第{_i++}次训练，loss是{l},a是{a}\r\n" + _frmMessage.textBox1.Text;
             });
         }
@@ -68,9 +68,9 @@ public partial class GameBoard
         Invoke(() =>
         {
             var mapValue = goBangAi.Predict(whiteHistory, blackHistory);
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < gameSize; i++)
             {
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j < gameSize; j++)
                 {
                     list.Add(new MapValueItem() { X = j, Y = i, Value = mapValue[i, j] });
                 }
@@ -110,13 +110,13 @@ public partial class GameBoard
     public void RandomPlay()
     {
         var point = RandomNextStep();
-        while (!IsGameEnd(point))
+        while (!IsGameEnd(point) && whiteHistory.Count + blackHistory.Count < gameSize * gameSize)
         {
             color = 3 - color;
             point = RandomNextStep();
         }
 
-        Invoke(() => { goBangAi.Train(whiteHistory, blackHistory); });
+        Invoke(() => { goBangAi.Train(whiteHistory, blackHistory, IsGameEnd(point)); });
         //OnGameEnd(this, new GameEndEventArgs(color));
     }
 

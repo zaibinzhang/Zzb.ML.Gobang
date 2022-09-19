@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Zzb.ML.AI;
 using Zzb.ML.GameComponent;
 
 namespace Zzb.ML.Gobang
@@ -17,7 +18,8 @@ namespace Zzb.ML.Gobang
         private static Bitmap blackChessImg = Resource.black;
         private static Bitmap whiteChessImg = Resource.white;
         //size*size个点的游戏，横向size个点，纵向size个点
-        private const int gameSize = 15;
+        private static readonly int gameSize = GoBangAi.GameSize;
+
         //一个格子的尺寸
         private const int blockSize = 30;
         //棋子图片尺寸
