@@ -9,14 +9,14 @@ namespace Zzb.ML.AI
 {
     public class GoBangAi
     {
-        public static int GameSize => 6;
+        public static int GameSize => 8;
 
         static GoBangAi()
         {
             _model = new Sequential();
             _model.Add(new Conv2D(32, kernel_size: (5, 5).ToTuple(),
                 activation: "relu",
-                input_shape: (GameSize, GameSize, 3), padding: "same"));
+                input_shape: (GameSize, GameSize, 2), padding: "same"));
             _model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
                 activation: "relu", padding: "same"));
             _model.Add(new Conv2D(128, kernel_size: (3, 3).ToTuple(),
@@ -60,7 +60,7 @@ namespace Zzb.ML.AI
         public float[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)
         {
             var isBlackGo = blackHistory.Count == whiteHistory.Count;
-            float[,,,] arrX = new float[1, GameSize, GameSize, 3];
+            float[,,,] arrX = new float[1, GameSize, GameSize, 2];
             int[,] mapWhite = new int[GameSize, GameSize];
             int[,] mapBlack = new int[GameSize, GameSize];
 
@@ -96,14 +96,14 @@ namespace Zzb.ML.AI
                     }
                 }
 
-                //是否先手
-                for (int j = 0; j < GameSize; j++)
-                {
-                    for (int k = 0; k < GameSize; k++)
-                    {
-                        arrX[0, j, k, 2] = 1;
-                    }
-                }
+                ////是否先手
+                //for (int j = 0; j < GameSize; j++)
+                //{
+                //    for (int k = 0; k < GameSize; k++)
+                //    {
+                //        arrX[0, j, k, 2] = 1;
+                //    }
+                //}
 
             }
             else
@@ -148,7 +148,7 @@ namespace Zzb.ML.AI
         {
             var isBlack = blackHistory.Count > whiteHistory.Count;
             var totalSize = blackHistory.Count + whiteHistory.Count;
-            int[,,,] arrX = new int[totalSize, GameSize, GameSize, 3];
+            int[,,,] arrX = new int[totalSize, GameSize, GameSize, 2];
             int[,] arrY = new int[totalSize, GameSize * GameSize];
             int[,] mapWhite = new int[GameSize, GameSize];
             int[,] mapBlack = new int[GameSize, GameSize];
@@ -175,14 +175,14 @@ namespace Zzb.ML.AI
                     }
                 }
 
-                //是否先手
-                for (int j = 0; j < GameSize; j++)
-                {
-                    for (int k = 0; k < GameSize; k++)
-                    {
-                        arrX[i * 2, j, k, 2] = 1;
-                    }
-                }
+                ////是否先手
+                //for (int j = 0; j < GameSize; j++)
+                //{
+                //    for (int k = 0; k < GameSize; k++)
+                //    {
+                //        arrX[i * 2, j, k, 2] = 1;
+                //    }
+                //}
 
                 if (isWin)
                 {
