@@ -14,29 +14,19 @@ namespace Zzb.ML.AI
         static GoBangAi()
         {
             _model = new Sequential();
-            _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
+            _model.Add(new Conv2D(32, kernel_size: (5, 5).ToTuple(),
                 activation: "relu",
                 input_shape: (GameSize, GameSize, 3), padding: "same"));
             _model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
                 activation: "relu", padding: "same"));
             _model.Add(new Conv2D(128, kernel_size: (3, 3).ToTuple(),
                 activation: "relu", padding: "same"));
-            _model.Add(new Conv2D(256, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            _model.Add(new Conv2D(128, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            _model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            _model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
-            _model.Add(new Conv2D(16, kernel_size: (3, 3).ToTuple(),
-                activation: "relu", padding: "same"));
             _model.Add(new Conv2D(4, kernel_size: (1, 1).ToTuple(),
                 activation: "relu", padding: "same"));
             _model.Add(new Flatten());
             _model.Add(new Dense(GameSize * GameSize, activation: "softmax"));
             _model.Compile(loss: "categorical_crossentropy",
-                optimizer: new Adam(0.0001F), metrics: new string[] { "accuracy" });
+                optimizer: new Adam(2e-4f), metrics: new string[] { "accuracy" });
         }
 
         private static readonly Sequential _model;
@@ -62,8 +52,8 @@ namespace Zzb.ML.AI
             var h = _model.Fit(x, y,
                   epochs: 1,
                   verbose: 0);
-            var loss = h.HistoryLogs["loss"].GetValue(0);
-            var accuracy = h.HistoryLogs["accuracy"].GetValue(0);
+            var loss = h.HistoryLogs["loss"].GetValue(h.Epoch.Length - 1);
+            var accuracy = h.HistoryLogs["accuracy"].GetValue(h.Epoch.Length - 1);
             return ((double)loss, (double)accuracy);
         }
 
@@ -159,7 +149,7 @@ namespace Zzb.ML.AI
             var isBlack = blackHistory.Count > whiteHistory.Count;
             var totalSize = blackHistory.Count + whiteHistory.Count;
             int[,,,] arrX = new int[totalSize, GameSize, GameSize, 3];
-            int[,] arrY = new int[totalSize, GameSize*GameSize];
+            int[,] arrY = new int[totalSize, GameSize * GameSize];
             int[,] mapWhite = new int[GameSize, GameSize];
             int[,] mapBlack = new int[GameSize, GameSize];
 
@@ -198,7 +188,7 @@ namespace Zzb.ML.AI
                 {
                     arrY[i * 2, blackHistory[i].X * GameSize + blackHistory[i].Y] = isBlack ? 1 : -1;
                 }
-               
+
                 mapBlack[blackHistory[i].X, blackHistory[i].Y] = 1;
 
                 if (!isBlack)
