@@ -54,7 +54,6 @@ namespace Zzb.ML.AI
 
         public (double loss, double accuracy) Train(List<Point> whiteHistory, List<Point> blackHistory)
         {
-            // var (x, y) = LoadRawData(whiteHistory, blackHistory);
             var (bt, bw, wt, ww) = LoadRawData(whiteHistory, blackHistory);
             _model.fit(bt.numpy(), bw.numpy());
             var h = _model.fit(wt.numpy(), ww.numpy());
@@ -85,7 +84,7 @@ namespace Zzb.ML.AI
                     {
                         whiteWinData[i, j] = 0.01f;
                     }
-                 
+
                 }
             }
 
@@ -147,125 +146,35 @@ namespace Zzb.ML.AI
         public float[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)
         {
             var isBlackGo = blackHistory.Count == whiteHistory.Count;
-            float[,,,] arrX = new float[1, 15, 15, 9];
-            int[,] mapWhite = new int[15, 15];
-            int[,] mapBlack = new int[15, 15];
+            float[,,,] arrX = new float[1, 15, 15, 2];
 
-            foreach (var point in whiteHistory)
+            for (int i = 0; i < whiteHistory.Count; i++)
             {
-                mapWhite[point.X, point.Y] = 1;
+                arrX[0, whiteHistory[i].Y, whiteHistory[i].X, isBlackGo ? 1 : 0] = 1;
             }
 
-            foreach (var point in blackHistory)
+            for (int i = 0; i < blackHistory.Count; i++)
             {
-                mapBlack[point.X, point.Y] = 1;
+                arrX[0, blackHistory[i].Y, blackHistory[i].X, isBlackGo ? 0 : 1] = 1;
             }
 
-            if (isBlackGo)
-            {
-                //构建历史步数
-                //构建黑色自己最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var blackHistCount = blackHistory.Count - 1 - j;
-                    if (blackHistCount >= 0)
-                    {
-                        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j] = 1;
-                    }
-                }
-                //构建白色最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var whiteHistCount = whiteHistory.Count - 1 - j;
-                    if (whiteHistCount >= 0)
-                    {
-                        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j + 3] = 1;
-                    }
-                }
+            // 将数据转换为Tensor
+            Tensor newBoardTensor = new Tensor(arrX, new Shape(1, 15, 15, 2));
 
-                //黑棋棋面
-                for (int j = 0; j < 15; j++)
-                {
-                    for (int k = 0; k < 15; k++)
-                    {
-                        arrX[0, j, k, 6] = mapBlack[j, k];
-                    }
-                }
+            // 使用模型进行预测
+            var prediction = _model.predict(newBoardTensor.numpy());
 
-                //白棋棋面
-                for (int j = 0; j < 15; j++)
-                {
-                    for (int k = 0; k < 15; k++)
-                    {
-                        arrX[0, j, k, 7] = mapWhite[j, k];
-                    }
-                }
-
-                //是否先手
-                for (int j = 0; j < 15; j++)
-                {
-                    for (int k = 0; k < 15; k++)
-                    {
-                        arrX[0, j, k, 8] = 1;
-                    }
-                }
-
-            }
-            else
-            {
-                //构建历史步数
-                //构建白色最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var whiteHistCount = whiteHistory.Count - 1 - j;
-                    if (whiteHistCount >= 0)
-                    {
-                        arrX[0, whiteHistory[whiteHistCount].X, whiteHistory[whiteHistCount].Y, j] = 1;
-                    }
-                }
-
-                //构建黑色最近走过的步数
-                for (int j = 0; j < 3; j++)
-                {
-                    var blackHistCount = blackHistory.Count - 1 - j;
-                    if (blackHistCount >= 0)
-                    {
-                        arrX[0, blackHistory[blackHistCount].X, blackHistory[blackHistCount].Y, j + 3] = 1;
-                    }
-                }
-
-                //白棋棋面
-                for (int j = 0; j < 15; j++)
-                {
-                    for (int k = 0; k < 15; k++)
-                    {
-                        arrX[0, j, k, 6] = mapWhite[j, k];
-                    }
-                }
-
-                //黑棋棋面
-                for (int j = 0; j < 15; j++)
-                {
-                    for (int k = 0; k < 15; k++)
-                    {
-                        arrX[0, j, k, 7] = mapBlack[j, k];
-                    }
-                }
-
-            }
-
-            var pre = _model.predict(np.array(arrX), verbose: 0).shape;
-
-
+            var shape = prediction.numpy();
+            var t = ((Tensor)shape).ToArray<float>();
             float[,] res = new float[15, 15];
 
-            //for (int i = 0; i < 15; i++)
-            //{
-            //    for (int j = 0; j < 15; j++)
-            //    {
-            //        res[i, j] = pre[i * 15 + j].item<float>();
-            //    }
-            //}
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    res[i, j] = t[i * 15 + j];
+                }
+            }
             return res;
         }
 
