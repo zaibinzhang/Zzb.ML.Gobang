@@ -84,10 +84,11 @@ public partial class GameBoard
                 this.Invalidate();
             });
             Invoke(() => { });
-            var (l, a) = GoBangAi.Train(whiteHistory, blackHistory);
+            var (bLoss, bAccuracy, wLoss, wAccuracy) = GoBangAi.Train(whiteHistory, blackHistory);
             Invoke(() =>
             {
-                _frmMessage.textBox1.Text = $"第{_i++}次训练，loss是{l},a是{a}\r\n" + _frmMessage.textBox1.Text;
+                string tip = color == 1 ? "黑" : "白";
+                _frmMessage.textBox1.Text = $"第{_i++}次对局训练，{tip}胜，黑棋：loss是{bLoss:0.0000},a是{bAccuracy:0.0000}。白棋：loss是{wLoss:0.0000},a是{wAccuracy:0.0000}。\r\n" + _frmMessage.textBox1.Text;
             });
         }
     }

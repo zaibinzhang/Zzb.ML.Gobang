@@ -53,14 +53,16 @@ namespace Zzb.ML.AI
             }
         }
 
-        public (double loss, double accuracy) Train(List<Point> whiteHistory, List<Point> blackHistory)
+        public (double bLoss, double bAccuracy, double wLoss, double wAccuracy) Train(List<Point> whiteHistory, List<Point> blackHistory)
         {
             var (bt, bw, wt, ww) = LoadRawData(whiteHistory, blackHistory);
-            _model.fit(bt.numpy(), bw.numpy());
-            var h = _model.fit(wt.numpy(), ww.numpy());
-            var loss = h.history["loss"][0];
-            var accuracy = h.history["accuracy"][0];
-            return ((double)loss, (double)accuracy);
+            var h = _model.fit(bt.numpy(), bw.numpy());
+            var bLoss = h.history["loss"][0];
+            var bAccuracy = h.history["accuracy"][0];
+            h = _model.fit(wt.numpy(), ww.numpy());
+            var wLoss = h.history["loss"][0];
+            var wAccuracy = h.history["accuracy"][0];
+            return (bLoss, bAccuracy, wLoss, wAccuracy);
         }
 
         private (Tensor bt, Tensor bw, Tensor wt, Tensor ww) LoadRawData(List<Point> whiteHistory, List<Point> blackHistory)
