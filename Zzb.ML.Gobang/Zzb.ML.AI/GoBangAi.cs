@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Threading.Channels;
+using Tensorflow;
 using Tensorflow.Keras;
 using Tensorflow.Keras.Engine;
 using Tensorflow.Keras.Layers;
@@ -15,7 +16,7 @@ namespace Zzb.ML.AI
     {
         static GoBangAi()
         {
-            var inputs = keras.Input(shape: (15, 15, 9), name: "棋盘qipan");
+            var inputs = keras.Input(shape: (15, 15, 2), name: "棋盘qipan");
             var x1 = keras.layers.Conv2D(32, 3, activation: "relu", padding: "same").Apply(inputs);
             var x2 = keras.layers.Conv2D(64, 3, activation: "relu", padding: "same").Apply(x1);
             var x3 = keras.layers.Conv2D(128, 3, activation: "relu", padding: "same").Apply(x2);
@@ -32,30 +33,6 @@ namespace Zzb.ML.AI
 
             _model.compile(keras.optimizers.Adam(0.0001f), keras.losses.CategoricalCrossentropy(), new[] { "accuracy" });
 
-            //_model = new Sequential();
-            //_model.add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu",
-            //    input_shape: (15, 15, 9), padding: "same"));
-            //_model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(128, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(256, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(128, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(64, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(32, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(16, kernel_size: (3, 3).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Conv2D(4, kernel_size: (1, 1).ToTuple(),
-            //    activation: "relu", padding: "same"));
-            //_model.Add(new Flatten());
-            //_model.Add(new Dense(225, activation: "softmax"));
-            //_model.Compile(loss: "categorical_crossentropy",
-            //    optimizer: new Adam(0.0001F), metrics: new string[] { "accuracy" });
         }
 
         private static readonly IModel _model;
@@ -77,16 +54,94 @@ namespace Zzb.ML.AI
 
         public (double loss, double accuracy) Train(List<Point> whiteHistory, List<Point> blackHistory)
         {
-            //var (x, y) = LoadRawData(whiteHistory, blackHistory);
-            int numSamples = 100;
-            var inputsData = np.random.randn(numSamples, 15, 15, 9).astype(np.float32);
-            var labelsData = np.random.randint(0, 225, size: numSamples).astype(np.float32);
-            var h = _model.fit(inputsData, labelsData,
-                  epochs: 1,
-                  verbose: 0);
+            // var (x, y) = LoadRawData(whiteHistory, blackHistory);
+            var (bt, bw, wt, ww) = LoadRawData(whiteHistory, blackHistory);
+            _model.fit(bt.numpy(), bw.numpy());
+            var h = _model.fit(wt.numpy(), ww.numpy());
             var loss = h.history["loss"][0];
             var accuracy = h.history["accuracy"][0];
             return ((double)loss, (double)accuracy);
+        }
+
+        private (Tensor bt, Tensor bw, Tensor wt, Tensor ww) LoadRawData(List<Point> whiteHistory, List<Point> blackHistory)
+        {
+            bool blackWin = blackHistory.Count > whiteHistory.Count;
+
+            //黑棋训练数据
+            var blackTrainData = new float[blackHistory.Count, 15, 15, 2];
+            var blackWinData = new float[blackHistory.Count, 225];
+
+            //白棋训练数据
+            var whiteTrainData = new float[whiteHistory.Count, 15, 15, 2];
+            var whiteWinData = new float[whiteHistory.Count, 225];
+
+            //初始号输出训练数据
+            for (int i = 0; i < blackHistory.Count; i++)
+            {
+                for (int j = 0; j < 225; j++)
+                {
+                    blackWinData[i, j] = 0.01f;
+                    if (whiteHistory.Count > i)
+                    {
+                        whiteWinData[i, j] = 0.01f;
+                    }
+                 
+                }
+            }
+
+
+            //构建黑棋数据
+            for (int i = 0; i < blackHistory.Count; i++)
+            {
+                if (i > 0)
+                {
+                    //构建黑棋输入数据
+                    for (int j = i; j < blackHistory.Count; j++)
+                    {
+                        blackTrainData[j, blackHistory[i - 1].Y, blackHistory[i - 1].X, 0] = 1;
+                        blackTrainData[j, whiteHistory[i - 1].Y, whiteHistory[i - 1].X, 1] = 1;
+
+                        blackWinData[j, blackHistory[i - 1].Y * 15 + blackHistory[i - 1].X] = 0;
+                        blackWinData[j, whiteHistory[i - 1].Y * 15 + whiteHistory[i - 1].X] = 0;
+                    }
+                }
+
+                //**********************************************************
+
+
+                //构建黑棋输出数据
+                var winBlackInt = blackHistory[i].Y * 15 + blackHistory[i].X;
+                blackWinData[i, winBlackInt] = blackWin ? 1 : 0;
+
+            }
+
+            //构建白棋数据
+            for (int i = 0; i < whiteHistory.Count; i++)
+            {
+                //构建黑色的历史
+                for (int j = i; j < whiteHistory.Count; j++)
+                {
+                    whiteTrainData[j, blackHistory[i].Y, blackHistory[i].X, 1] = 1;
+
+                    whiteWinData[j, blackHistory[i].Y * 15 + blackHistory[i].X] = 0;
+
+                    if (i > 0)
+                    {
+                        whiteTrainData[j, whiteHistory[i - 1].Y, whiteHistory[i - 1].X, 0] = 1;
+
+                        whiteWinData[j, whiteHistory[i - 1].Y * 15 + whiteHistory[i - 1].X] = 0;
+                    }
+                }
+
+                //*******************************
+
+                //构建白棋输出数据
+                var winWhiteInt = whiteHistory[i].Y * 15 + whiteHistory[i].X;
+                whiteWinData[i, winWhiteInt] = blackWin ? 0 : 1;
+            }
+
+            return (new Tensor(blackTrainData, new Shape(blackHistory.Count, 15, 15, 2)),
+                new Tensor(blackWinData, new Shape(blackHistory.Count, 225)), new Tensor(whiteTrainData, new Shape(whiteHistory.Count, 15, 15, 2)), new Tensor(whiteWinData, new Shape(whiteHistory.Count, 225)));
         }
 
         public float[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)
