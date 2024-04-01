@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Text;
 using System.Threading.Channels;
 using Tensorflow;
 using Tensorflow.Keras;
@@ -20,9 +21,9 @@ namespace Zzb.ML.AI
             var x1 = keras.layers.Conv2D(32, 3, activation: "relu", padding: "same").Apply(inputs);
             var x2 = keras.layers.Conv2D(64, 3, activation: "relu", padding: "same").Apply(x1);
             var x3 = keras.layers.Conv2D(128, 3, activation: "relu", padding: "same").Apply(x2);
-            var x4 = keras.layers.Conv2D(256, 3, activation: "relu", padding: "same").Apply(x3);
-            var x5 = keras.layers.Conv2D(128, 3, activation: "relu", padding: "same").Apply(x4);
-            var x6 = keras.layers.Conv2D(64, 3, activation: "relu", padding: "same").Apply(x5);
+            //var x4 = keras.layers.Conv2D(256, 3, activation: "relu", padding: "same").Apply(x3);
+            //var x5 = keras.layers.Conv2D(128, 3, activation: "relu", padding: "same").Apply(x4);
+            var x6 = keras.layers.Conv2D(64, 3, activation: "relu", padding: "same").Apply(x3);
             var x7 = keras.layers.Conv2D(32, 3, activation: "relu", padding: "same").Apply(x6);
             var x8 = keras.layers.Conv2D(16, 3, activation: "relu", padding: "same").Apply(x7);
             var x9 = keras.layers.Conv2D(4, 3, activation: "relu", padding: "same").Apply(x8);
@@ -139,8 +140,54 @@ namespace Zzb.ML.AI
                 whiteWinData[i, winWhiteInt] = blackWin ? 0 : 1;
             }
 
+            var index = blackHistory.Count - 1;
+            var sb = DebugTest(blackTrainData, blackWinData, index);
+
             return (new Tensor(blackTrainData, new Shape(blackHistory.Count, 15, 15, 2)),
                 new Tensor(blackWinData, new Shape(blackHistory.Count, 225)), new Tensor(whiteTrainData, new Shape(whiteHistory.Count, 15, 15, 2)), new Tensor(whiteWinData, new Shape(whiteHistory.Count, 225)));
+        }
+
+        private string DebugTest(float[,,,] floats, float[,] winRate, int index)
+        {
+            var sb = new StringBuilder();
+            sb.Append("棋盘\r\n");
+
+            for (int i = 0; i < 15; i++)
+            {
+                var fun = (int j) =>
+                {
+                    if (floats[index, i, j, 0] > 0)
+                    {
+                        return "1";
+                    }
+
+                    if (floats[index, i, j, 1] > 0)
+                    {
+                        return "2";
+                    }
+
+                    return "0";
+                };
+                for (int j = 0; j < 15; j++)
+                {
+                    sb.Append(fun(j) + ",");
+                }
+                sb.AppendLine();
+            }
+
+            sb.AppendLine();
+            sb.Append("胜率\r\n");
+
+            for (int i = 0; i < 15; i++)
+            {
+                for (int j = 0; j < 15; j++)
+                {
+                    sb.Append(winRate[index, i * 15 + j].ToString("0.000") + ",");
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
 
         public float[,] Predict(List<Point> whiteHistory, List<Point> blackHistory)

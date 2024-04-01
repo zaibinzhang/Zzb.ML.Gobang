@@ -53,6 +53,26 @@ public partial class GameBoard
                 color = 3 - color;
                 point = AiNextStep();
             }
+
+            var aa = _winPoints;
+            if (aa[0].X == aa[1].X)
+            {
+                var linq = from i in aa orderby i.Y select i;
+                var first = linq.First();
+                var last = linq.Last();
+                Invoke(() =>
+                {
+                    var firstPoint = IndexToScreen(first.X, first.Y);
+                    var lastPoint = IndexToScreen(last.X, last.Y);
+                    using Graphics g = Graphics.FromImage(this.BackgroundImage);
+                    using (Pen pen = new Pen(Color.Red, 3))
+                    {
+                        // 画一条红线，起始点 (10, 10)，结束点 (100, 100)
+                        g.DrawLine(pen, firstPoint.X, firstPoint.Y, lastPoint.X, lastPoint.Y);
+                    }
+                    this.Invalidate();
+                });
+            }
             var (l, a) = GoBangAi.Train(whiteHistory, blackHistory);
             Invoke(() =>
             {

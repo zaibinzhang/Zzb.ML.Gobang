@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Zzb.ML.GameComponent;
@@ -220,6 +221,14 @@ namespace Zzb.ML.Gobang
             return distance;
         }
 
+        private List<Point> _winPoints = new List<Point>();
+
+        private void ClearWinPoints(int xpos, int ypos)
+        {
+            _winPoints = new List<Point>();
+            _winPoints.Add(new Point(xpos,ypos));
+        }
+
         /// <summary>
         /// 各个方向上计数
         /// </summary>
@@ -230,6 +239,7 @@ namespace Zzb.ML.Gobang
         {
             //水平方向的计数
             hSum = 1;
+            ClearWinPoints(xpos, ypos);
             for (int i = xpos - 1; i >= 0; i--)
             {
                 if (!ExistSameColor(i, ypos, color))
@@ -247,8 +257,14 @@ namespace Zzb.ML.Gobang
                 hSum++;
             }
 
+            if (hSum > 4)
+            {
+                return;
+            }
+
             //纵向的计数
             vSum = 1;
+            ClearWinPoints(xpos, ypos);
             for (int i = ypos - 1; i >= 0; i--)
             {
                 if (!ExistSameColor(xpos, i, color))
@@ -265,9 +281,14 @@ namespace Zzb.ML.Gobang
                 }
                 vSum++;
             }
+            if (vSum > 4)
+            {
+                return;
+            }
 
             //左斜线计数
             lSum = 1;
+            ClearWinPoints(xpos, ypos);
             for (int i = xpos - 1, j = ypos - 1; i >= 0 && j >= 0; i--, j--)
             {
                 if (!ExistSameColor(i, j, color))
@@ -284,8 +305,15 @@ namespace Zzb.ML.Gobang
                 }
                 lSum++;
             }
+
+            if (lSum > 4)
+            {
+                return;
+            }
+
             //右斜线的判断
             rSum = 1;
+            ClearWinPoints(xpos, ypos);
             for (int i = xpos - 1, j = ypos + 1; i >= 0 && j <= gameSize; i--, j++)
             {
                 if (!ExistSameColor(i, j, color))

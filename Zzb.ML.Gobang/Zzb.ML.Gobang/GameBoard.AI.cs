@@ -52,7 +52,7 @@ namespace Zzb.ML.Gobang
             {
                 for (int j = 0; j < gameSize; j++)
                 {
-                    if(map[i, j] == 0)
+                    if (map[i, j] == 0)
                     {
                         int sumMy = evaluate(j, i, color);
                         int sumOppo = evaluate(j, i, 3 - color);
@@ -111,7 +111,7 @@ namespace Zzb.ML.Gobang
             for (int i = 0; i < 4; i++)
             {
                 SituationType type = GetSituationType(x, y, i, color);
-                switch(type)
+                switch (type)
                 {
                     case SituationType.BeFive:
                         sum += BE_FIVE;
@@ -200,7 +200,12 @@ namespace Zzb.ML.Gobang
         /// <returns></returns>
         private bool ExistSameColor(int x, int y, int color)
         {
-            return NoCrossBorder(x, y) && map[y, x] == color;
+            var b = NoCrossBorder(x, y) && map[y, x] == color;
+            if (b)
+            {
+                _winPoints.Add(new Point(x, y));
+            }
+            return b;
         }
 
         /// <summary>
