@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zzb.ML.Gobang", "Zzb.ML.Gob
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zzb.ML.GameComponent", "Zzb.ML.GameComponent\Zzb.ML.GameComponent.csproj", "{15CE3E41-8967-4C09-B8CF-6DA7C300C161}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zzb.ML.AI", "Zzb.ML.AI\Zzb.ML.AI.csproj", "{4936F4AD-184D-474B-A1DF-2A875593FFE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zzb.ML.AI", "Zzb.ML.AI\Zzb.ML.AI.csproj", "{4936F4AD-184D-474B-A1DF-2A875593FFE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zzb.ML.Test", "Zzb.ML.Test\Zzb.ML.Test.csproj", "{D313CC46-8AA4-4F7F-BF93-3EE9FA47E44F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{4936F4AD-184D-474B-A1DF-2A875593FFE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4936F4AD-184D-474B-A1DF-2A875593FFE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4936F4AD-184D-474B-A1DF-2A875593FFE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D313CC46-8AA4-4F7F-BF93-3EE9FA47E44F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D313CC46-8AA4-4F7F-BF93-3EE9FA47E44F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D313CC46-8AA4-4F7F-BF93-3EE9FA47E44F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D313CC46-8AA4-4F7F-BF93-3EE9FA47E44F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
