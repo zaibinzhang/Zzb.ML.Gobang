@@ -6,9 +6,9 @@ var inputs = keras.Input(shape: (15, 15, 1), name: "棋盘qipan");
 var x1 = keras.layers.Conv2D(32, 3, activation: "relu", padding: "same").Apply(inputs);
 var x2 = keras.layers.Conv2D(64, 3, activation: "relu", padding: "same").Apply(x1);
 var x3 = keras.layers.Conv2D(128, 3, activation: "relu", padding: "same").Apply(x2);
-var x4 = keras.layers.Conv2D(256, 3, activation: "relu", padding: "same").Apply(x3);
-var x5 = keras.layers.Conv2D(128, 3, activation: "relu", padding: "same").Apply(x4);
-var x6 = keras.layers.Conv2D(64, 3, activation: "relu", padding: "same").Apply(x5);
+//var x4 = keras.layers.Conv2D(256, 3, activation: "relu", padding: "same").Apply(x3);
+//var x5 = keras.layers.Conv2D(128, 3, activation: "relu", padding: "same").Apply(x4);
+var x6 = keras.layers.Conv2D(64, 3, activation: "relu", padding: "same").Apply(x3);
 var x7 = keras.layers.Conv2D(32, 3, activation: "relu", padding: "same").Apply(x6);
 var x8 = keras.layers.Conv2D(16, 3, activation: "relu", padding: "same").Apply(x7);
 var x9 = keras.layers.Conv2D(4, 3, activation: "relu", padding: "same").Apply(x8);
@@ -44,7 +44,7 @@ model.compile(keras.optimizers.Adam(0.0001f), keras.losses.CategoricalCrossentro
     // 将标签数据转换为张量
     Tensor labelTensor = new Tensor(labelData, new Shape(l, 225)); // 加入批次维度
 
-    model.fit(boardTensor.numpy(), labelTensor.numpy());
+    model.fit(boardTensor.numpy(), labelTensor.numpy(), epochs: 10);
 }
 
 {
