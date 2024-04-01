@@ -74,8 +74,6 @@ public partial class GameBoard
             }
         }
 
-
-
         var listSort = (from i in list orderby i.Value descending select i).ToList();
 
         var point = new Point();
