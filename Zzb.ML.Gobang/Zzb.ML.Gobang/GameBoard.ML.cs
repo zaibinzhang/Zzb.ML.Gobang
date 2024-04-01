@@ -92,7 +92,7 @@ public partial class GameBoard
             Invoke(() =>
             {
                 string tip = color == 1 ? "黑" : "白";
-                _frmMessage.textBox1.Text = $"第{_i++}次对局训练，{tip}胜，黑棋：loss是{bLoss:0.0000},a是{bAccuracy:0.0000}。白棋：loss是{wLoss:0.0000},a是{wAccuracy:0.0000}。\r\n" + _frmMessage.textBox1.Text;
+                _frmMessage.textBox1.Text = $"第{_i++}次对局训练，{tip}胜，黑棋：loss是{bLoss:00.0000},a是{bAccuracy:0.0000}。白棋：loss是{wLoss:00.0000},a是{wAccuracy:0.0000}。\r\n" + _frmMessage.textBox1.Text;
                 TimeSpan ts = _stopwatch.Elapsed;
                 _frmMessage.SetTitle($"训练时间：{String.Format("{0:00}:{1:00}:{2:00}",
                     ts.Hours, ts.Minutes, ts.Seconds)}");
