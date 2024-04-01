@@ -53,10 +53,9 @@ public partial class GameBoard
                 color = 3 - color;
                 point = AiNextStep();
             }
-
+            var (l, a) = GoBangAi.Train(whiteHistory, blackHistory);
             Invoke(() =>
             {
-                var (l, a) = GoBangAi.Train(whiteHistory, blackHistory);
                 _frmMessage.textBox1.Text = $"第{_i++}次训练，loss是{l},a是{a}\r\n" + _frmMessage.textBox1.Text;
             });
         }
@@ -65,17 +64,16 @@ public partial class GameBoard
     public Point AiNextStep()
     {
         var list = new List<MapValueItem>();
-        Invoke(() =>
+
+        var mapValue = GoBangAi.Predict(whiteHistory, blackHistory);
+        for (int i = 0; i < 15; i++)
         {
-            var mapValue = GoBangAi.Predict(whiteHistory, blackHistory);
-            for (int i = 0; i < 15; i++)
+            for (int j = 0; j < 15; j++)
             {
-                for (int j = 0; j < 15; j++)
-                {
-                    list.Add(new MapValueItem() { X = j, Y = i, Value = mapValue[i, j] });
-                }
+                list.Add(new MapValueItem() { X = j, Y = i, Value = mapValue[i, j] });
             }
-        });
+        }
+
 
 
         var listSort = (from i in list orderby i.Value descending select i).ToList();
