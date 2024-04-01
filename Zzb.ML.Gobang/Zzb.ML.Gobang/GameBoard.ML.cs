@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Zzb.ML.AI;
 using Zzb.ML.GameComponent;
+using Tensorflow.Keras.Engine;
 
 namespace Zzb.ML.Gobang;
 
@@ -54,25 +55,35 @@ public partial class GameBoard
                 point = AiNextStep();
             }
 
+            Point first;
+            Point last;
             var aa = _winPoints;
             if (aa[0].X == aa[1].X)
             {
                 var linq = from i in aa orderby i.Y select i;
-                var first = linq.First();
-                var last = linq.Last();
-                Invoke(() =>
-                {
-                    var firstPoint = IndexToScreen(first.X, first.Y);
-                    var lastPoint = IndexToScreen(last.X, last.Y);
-                    using Graphics g = Graphics.FromImage(this.BackgroundImage);
-                    using (Pen pen = new Pen(Color.Red, 3))
-                    {
-                        // 画一条红线，起始点 (10, 10)，结束点 (100, 100)
-                        g.DrawLine(pen, firstPoint.X, firstPoint.Y, lastPoint.X, lastPoint.Y);
-                    }
-                    this.Invalidate();
-                });
+                first = linq.First();
+                last = linq.Last();
+
             }
+            else
+            {
+                var linq = from i in aa orderby i.X select i;
+                first = linq.First();
+                last = linq.Last();
+            }
+            Invoke(() =>
+            {
+                var firstPoint = IndexToScreen(first.X, first.Y);
+                var lastPoint = IndexToScreen(last.X, last.Y);
+                using Graphics g = Graphics.FromImage(this.BackgroundImage);
+                using (Pen pen = new Pen(Color.Red, 3))
+                {
+                    // 画一条红线，起始点 (10, 10)，结束点 (100, 100)
+                    g.DrawLine(pen, firstPoint.X, firstPoint.Y, lastPoint.X, lastPoint.Y);
+                }
+                this.Invalidate();
+            });
+            Invoke(() => { });
             var (l, a) = GoBangAi.Train(whiteHistory, blackHistory);
             Invoke(() =>
             {

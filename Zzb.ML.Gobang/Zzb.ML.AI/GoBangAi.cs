@@ -140,8 +140,8 @@ namespace Zzb.ML.AI
                 whiteWinData[i, winWhiteInt] = blackWin ? 0 : 1;
             }
 
-            var index = blackHistory.Count - 1;
-            var sb = DebugTest(blackTrainData, blackWinData, index);
+            //var index = blackHistory.Count - 1;
+            //var sb = DebugTest(blackTrainData, blackWinData, index);
 
             return (new Tensor(blackTrainData, new Shape(blackHistory.Count, 15, 15, 2)),
                 new Tensor(blackWinData, new Shape(blackHistory.Count, 225)), new Tensor(whiteTrainData, new Shape(whiteHistory.Count, 15, 15, 2)), new Tensor(whiteWinData, new Shape(whiteHistory.Count, 225)));
