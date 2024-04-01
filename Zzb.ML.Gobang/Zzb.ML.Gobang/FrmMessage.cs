@@ -16,5 +16,11 @@ namespace Zzb.ML.Gobang
         {
             InitializeComponent();
         }
+
+        public void SetTitle(string title)
+        {
+            this.Text=title;
+            
+        }
     }
 }

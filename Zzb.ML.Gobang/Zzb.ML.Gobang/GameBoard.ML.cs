@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Zzb.ML.AI;
 using Zzb.ML.GameComponent;
 using Tensorflow.Keras.Engine;
+using System.Diagnostics;
 
 namespace Zzb.ML.Gobang;
 
@@ -21,6 +22,8 @@ public partial class GameBoard
 
     private int _i = 1;
 
+    private Stopwatch _stopwatch = new Stopwatch();
+
     public void AutoPlay()
     {
         _frmMessage = new FrmMessage();
@@ -32,6 +35,7 @@ public partial class GameBoard
                 AutoPlayTask();
             }
         }).Start();
+        _stopwatch.Start();
     }
 
     private void AutoPlayTask()
@@ -89,6 +93,9 @@ public partial class GameBoard
             {
                 string tip = color == 1 ? "黑" : "白";
                 _frmMessage.textBox1.Text = $"第{_i++}次对局训练，{tip}胜，黑棋：loss是{bLoss:0.0000},a是{bAccuracy:0.0000}。白棋：loss是{wLoss:0.0000},a是{wAccuracy:0.0000}。\r\n" + _frmMessage.textBox1.Text;
+                TimeSpan ts = _stopwatch.Elapsed;
+                _frmMessage.SetTitle($"训练时间：{String.Format("{0:00}:{1:00}:{2:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds)}");
             });
         }
     }
